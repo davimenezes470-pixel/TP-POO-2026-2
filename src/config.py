@@ -1,0 +1,16 @@
+# config.py
+
+# --- CONFIGURAÇÕES DA TELA ---
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
+FPS = 60
+TITLE = "Demo: Tigrinho - RPG & Minigames"
+
+# --- CORES (RGB) ---
+COLOR_BLACK = (0, 0, 0)
+COLOR_WHITE = (255, 255, 255)
+
+# --- FÍSICA E JOGABILIDADE ---
+# --- EXEMPLOS ---
+PLAYER_SPEED = 5
+TILE_SIZE = 40
