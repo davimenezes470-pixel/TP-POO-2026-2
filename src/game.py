@@ -1,8 +1,11 @@
 import ctypes
 import random
 import sys
+import os #centraliza a janela automaticamente, se ajustando ao monitor
 import pygame
 from core.state_manager import StateManager
+from states.menu_state import MenuState
+from states.game_state import GameState
 import config
 
 
@@ -11,6 +14,7 @@ try:
 except Exception:
     pass
 
+os.environ['SDL_VIDEO_WINDOW_POS'] = 'center'
 
 class Game:
 
@@ -24,11 +28,16 @@ class Game:
         self.is_fullscreen = False
 
         # Cria a janela inicial
-        self.screen = pygame.display.set_mode((self.window_width, self.window_height))
+        self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE)
         pygame.display.set_caption(config.TITLE)
 
         self.clock = pygame.time.Clock()
         self.running = True
+
+        self.state_manager = StateManager()
+        self.state_manager.add_state("Menu", MenuState(self, self.state_manager))
+        self.state_manager.add_state("Jogo", GameState(self, self.state_manager))
+        self.state_manager.change_state("Menu")
 
 
     def toggle_fullscreen(self):
@@ -40,10 +49,13 @@ class Game:
             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         else:
             # Retorna para o modo Janela com o tamanho definido
-            self.screen = pygame.display.set_mode((self.window_width, self.window_height))
+            self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE)
 
     def process_events(self):
-        for event in pygame.event.get():
+
+        events = pygame.event.get()
+
+        for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
 
@@ -52,17 +64,18 @@ class Game:
                 if event.key == pygame.K_F11:
                     self.toggle_fullscreen()
 
-                # Tecla ESC para sair da tela cheia ou fechar o jogo
-                elif event.key == pygame.K_ESCAPE:
-                    if self.is_fullscreen:
-                        self.toggle_fullscreen()
-                    else:
-                        self.running = False
+        self.state_manager.process_events(events)
 
     def run(self):
         while self.running:
+            dt = self.clock.tick(config.FPS) / 1000.0
+
             self.process_events()
-            self.clock.tick(config.FPS)
+            self.state_manager.update(dt)
+
+            self.screen.fill(getattr(config, 'COLOR_BG', (24, 24, 28)))
+            self.state_manager.draw(self.screen)
+            pygame.display.flip()
 
         pygame.quit()
         sys.exit()

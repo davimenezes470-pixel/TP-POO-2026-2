@@ -10,6 +10,9 @@ TITLE = "Demo: Tigrinho - RPG & Minigames"
 COLOR_BLACK = (0, 0, 0)
 COLOR_WHITE = (255, 255, 255)
 
+# --- A PARTE ---
+COLOR_BG = (24, 24, 28)
+
 # --- FÍSICA E JOGABILIDADE ---
 # --- EXEMPLOS ---
 PLAYER_SPEED = 5
