@@ -18,9 +18,9 @@ class MenuState(BaseState):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_1, pygame.K_KP1):
-                    self.state_manager.change_state("JOGO")
+                    self.state_manager.change_state("Jogo")
                 elif event.key in (pygame.K_2, pygame.K_KP2):
-                    self.state_manager.change_state("PLACAR")
+                    self.state_manager.change_state("Runs")
                 elif event.key in (pygame.K_3, pygame.K_KP3):
                     self.game.running = False
 
@@ -52,7 +52,7 @@ class MenuState(BaseState):
 
         for idx, option in enumerate(self.options):
             is_selected = idx == self.selected_index
-            color = (255, 215, 0) if is_selected else config.COLOR_WHITE
+            color = (255, 0, 0) if is_selected else config.COLOR_WHITE
             label = f"> {option} <" if is_selected else f" {option}"
 
             surf = self.font_options.render(label, True, color)
