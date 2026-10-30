@@ -7,7 +7,7 @@ from core.state_manager import StateManager
 from states.menu_state import MenuState
 from states.game_state import GameState
 import config
-
+from modelos.player import Player
 
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(2)
@@ -31,8 +31,15 @@ class Game:
         self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE)
         pygame.display.set_caption(config.TITLE)
 
+        screen_max = pygame.display.get_wm_info().get('window')
+        if screen_max:
+            ctypes.windll.user32.ShowWindow(screen_max, 3)
+
+
         self.clock = pygame.time.Clock()
         self.running = True
+
+        self.player = Player(100, 300)
 
         self.state_manager = StateManager()
         self.state_manager.add_state("Menu", MenuState(self, self.state_manager))
@@ -49,7 +56,7 @@ class Game:
             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         else:
             # Retorna para o modo Janela com o tamanho definido
-            self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE)
+            self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE | pygame.WINDOWMAXIMIZED)
 
     def process_events(self):
 
