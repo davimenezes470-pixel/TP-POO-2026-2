@@ -19,9 +19,9 @@ class MenuState(BaseState):
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_1, pygame.K_KP1):
                     self.state_manager.change_state("Jogo")
-                elif event.key in (pygame.K_2, pygame.K_KP2):
+                elif event.key in (pygame.K_3, pygame.K_KP2):
                     self.state_manager.change_state("Runs")
-                elif event.key in (pygame.K_3, pygame.K_KP3):
+                elif event.key in (pygame.K_4, pygame.K_KP3):
                     self.game.running = False
 
                 elif event.key in (pygame.K_UP, pygame.K_w):

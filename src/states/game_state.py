@@ -28,6 +28,8 @@ class GameState(BaseState):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.state_manager.change_state("Menu")
+                if event.key == pygame.K_c:
+                    self.state_manager.change_state("Celular")
 
     def update(self, dt):
         self.all_sprites.update(dt)
