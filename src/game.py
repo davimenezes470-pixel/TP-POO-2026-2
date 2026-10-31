@@ -39,7 +39,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        self.player = Player(100, 300)
+        self.player = Player(100, 720-512)
 
         self.state_manager = StateManager()
         self.state_manager.add_state("Menu", MenuState(self, self.state_manager))

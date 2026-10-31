@@ -31,11 +31,12 @@ class Player(pygame.sprite.Sprite):
         # Configuração inicial exigida pelo Pygame
         self.image = self.animations[self.state][int(self.frame_index)]
         self.rect = self.image.get_rect(topleft=(x, y))
+        self.hitbox = self.rect.inflate(-512, 0)
 
         # --- FÍSICA E MOVIMENTO ---
         self.pos_x = float(x)
         self.pos_y = float(y)
-        self.speed = 300  # Pixels por segundo
+        self.speed = 400  # Pixels por segundo
 
     def _extrair_frames(self, sheet, num_frames, espelhar=False):
         """
@@ -59,7 +60,7 @@ class Player(pygame.sprite.Sprite):
                 frame = pygame.transform.flip(frame, True, False)
                 
             # Opcional: Se a imagem ficar muito grande na tela, você pode escalá-la aqui:
-            frame = pygame.transform.scale(frame, (256, 256))
+            frame = pygame.transform.scale(frame, (768, 768))
 
             frames.append(frame)
             
@@ -107,3 +108,10 @@ class Player(pygame.sprite.Sprite):
         # Sincroniza o Float de posição com o Rect (Inteiro) para o Pygame desenhar no lugar certo
         self.rect.x = int(self.pos_x)
         self.rect.y = int(self.pos_y)
+
+        # 1. Atualiza primeiro a Hitbox (a caixa pequena)
+        self.hitbox.x = int(self.pos_x)
+        self.hitbox.y = int(self.pos_y)
+
+        # 2. Faz a imagem seguir o centro da Hitbox
+        self.rect.center = self.hitbox.center
