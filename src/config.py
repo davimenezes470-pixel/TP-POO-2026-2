@@ -5,6 +5,7 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 FPS = 60
 TITLE = "Demo: Tigrinho - RPG & Minigames"
+NAME_PHONE = "Apple: Iphone 18 Pro Max"
 
 # --- CORES (RGB) ---
 COLOR_BLACK = (0, 0, 0)

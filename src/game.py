@@ -7,6 +7,8 @@ from core.state_manager import StateManager
 from states.menu_state import MenuState
 from states.game_state import GameState
 from states.roleta_state import RoletaState
+from states.black_state import BlackjackState
+from states.celular_state import CelularState
 import config
 from modelos.player import Player
 
@@ -45,7 +47,9 @@ class Game:
         self.state_manager = StateManager()
         self.state_manager.add_state("Menu", MenuState(self, self.state_manager))
         self.state_manager.add_state("Jogo", GameState(self, self.state_manager))
+        self.state_manager.add_state("Celular", CelularState(self, self.state_manager))
         self.state_manager.add_state("Roleta", RoletaState(self, self.state_manager))
+        self.state_manager.add_state("Blackjack", BlackjackState(self, self.state_manager))
         self.state_manager.change_state("Menu")
 
 

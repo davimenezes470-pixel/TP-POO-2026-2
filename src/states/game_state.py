@@ -23,6 +23,8 @@ class GameState(BaseState):
                 # ESC faz voltar ao menu
                 if event.key == pygame.K_ESCAPE:
                     self.state_manager.change_state("Menu")
+                if event.key == pygame.K_c:
+                    self.state_manager.change_state("Celular")
 
     def update(self, dt):
         # Chama o método update() de todos os sprites no grupo (incluindo o Player)

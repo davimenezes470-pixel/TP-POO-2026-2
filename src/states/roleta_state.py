@@ -60,7 +60,7 @@ class RoletaState(BaseState):
                 continue
 
             if event.key == pygame.K_ESCAPE and not self.girando:
-                self.state_manager.change_state("Menu")
+                self.state_manager.change_state("Celular")
             elif self.girando:
                 continue  # bloqueia mudanças durante o giro
             elif event.key == pygame.K_r:
