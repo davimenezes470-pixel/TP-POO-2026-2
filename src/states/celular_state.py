@@ -8,7 +8,7 @@ class CelularState(BaseState):
     def __init__(self, game, state_manager):
         super().__init__(state_manager)
         self.game = game
-        self.options = ["Roleta", "Blackjack"]
+        self.options = ["Roleta", "Blackjack", "Tigrinho"]
         self.selected_index = 0
 
         self.font_title = pygame.font.Font(None, 52)
@@ -21,6 +21,8 @@ class CelularState(BaseState):
                     self.state_manager.change_state("Roleta")
                 elif event.key in (pygame.K_2, pygame.K_KP2):
                     self.state_manager.change_state("Blackjack")
+                elif event.key in (pygame.K_3, pygame.K_KP3):
+                    self.state_manager.change_state("Tigrinho")
                 elif event.key == pygame.K_ESCAPE:
                     self.state_manager.change_state("Jogo")
 
@@ -38,7 +40,7 @@ class CelularState(BaseState):
         elif self.selected_index == 1:
             self.state_manager.change_state("Blackjack")
         elif self.selected_index == 2:
-            self.game.running = False
+            self.state_manager.change_state("Tigrinho")
 
     def update(self, dt):
         pass
