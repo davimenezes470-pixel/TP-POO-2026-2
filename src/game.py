@@ -11,6 +11,7 @@ from states.black_state import BlackjackState
 from states.celular_state import CelularState
 import config
 from modelos.player import Player
+from states.slots_state import SlotsState
 
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(2)
@@ -50,6 +51,7 @@ class Game:
         self.state_manager.add_state("Celular", CelularState(self, self.state_manager))
         self.state_manager.add_state("Roleta", RoletaState(self, self.state_manager))
         self.state_manager.add_state("Blackjack", BlackjackState(self, self.state_manager))
+        self.state_manager.add_state("Tigrinho", SlotsState(self, self.state_manager))
         self.state_manager.change_state("Menu")
 
 
