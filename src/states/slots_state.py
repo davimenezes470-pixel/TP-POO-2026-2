@@ -1,5 +1,7 @@
 import math
+
 import pygame
+
 import config
 from states.base_state import BaseState
 from modelos.slots import (
@@ -29,11 +31,12 @@ TEMPO_FREIO = 0.45
 
 
 class Rolo:
+    """Só animação. `pos` = índice (float) do símbolo do topo; diminui => símbolos descem."""
 
     def __init__(self, tamanho_fita):
         self.n = tamanho_fita
         self.pos = 0.0
-        self.modo = "parado"  
+        self.modo = "parado"    # girando | freando | parado
         self._t = 0.0
         self._parar_em = 0.0
         self._alvo = 0
@@ -65,6 +68,10 @@ class Rolo:
 
 
 class SlotsState(BaseState):
+    """Tela do Tigrinho: desenha os rolos, anima o giro e lê os comandos.
+
+    A regra do jogo fica em MesaSlots; aqui só há apresentação e input.
+    """
 
     def __init__(self, game, state_manager):
         super().__init__(state_manager)
@@ -107,6 +114,10 @@ class SlotsState(BaseState):
                 self.valor_aposta = min(self.valor_aposta + PASSO_APOSTA, self._aposta_maxima())
             elif event.key == pygame.K_DOWN:
                 self.valor_aposta = max(self.valor_aposta - PASSO_APOSTA, APOSTA_MINIMA)
+            elif event.key == pygame.K_a:
+                # ALL-IN: aposta o máximo possível (saldo // linhas) e já gira
+                self.valor_aposta = self._aposta_maxima()
+                self._iniciar_giro()
             elif event.key == pygame.K_t:
                 self.modo_teste = not self.modo_teste
             elif event.key == pygame.K_x and self.modo_teste:
@@ -251,6 +262,7 @@ class SlotsState(BaseState):
         ajuda = [
             "SETAS CIMA/BAIXO: valor da aposta",
             "ESPAÇO: girar",
+            "A: ALL-IN (aposta o máximo e gira)",
             "T: modo teste (X: símbolo forçado)",
             "ESC: voltar ao celular",
         ]
