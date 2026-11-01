@@ -102,12 +102,16 @@ class MesaSlots:
         self.resultado = None
 
 #sorteia os rolos
-    def sortear(self, paradas_forcadas=None):
+    def sortear(self, paradas_forcadas=None, grade_forcada=None):
 
         if not self.aposta:
             raise ValueError("Faça uma aposta antes de girar")
         paradas = list(paradas_forcadas) if paradas_forcadas is not None else self.rolos.sortear_paradas()
-        grade = [self.rolos.visiveis(p) for p in paradas]
+        #J para jackpot 9 tigres
+        if grade_forcada is not None:
+            grade = [list(coluna) for coluna in grade_forcada]
+        else:
+            grade = [self.rolos.visiveis(p) for p in paradas]
         vitorias = calcular_vitorias(grade, self.aposta)
         self.resultado = ResultadoGiro(paradas, grade, vitorias)
         return self.resultado

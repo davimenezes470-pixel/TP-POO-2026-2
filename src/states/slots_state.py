@@ -3,15 +3,13 @@ import os
 import pygame
 import config
 from states.base_state import BaseState
-from modelos.slots import (
-    MesaSlots, FITA, LINHAS, PAGAMENTO, NUM_ROLOS, NUM_LINHAS,
-)
+from modelos.slots import (MesaSlots, FITA, CORINGA, LINHAS, PAGAMENTO, NUM_ROLOS, NUM_LINHAS)
 
 COR_FUNDO = (38, 14, 18)
 COR_QUADRO = (28, 18, 20)
 COR_BORDA = (212, 175, 55)
 COR_AJUDA = (180, 180, 190)
-# Visual provisório sem imagens.
+# Visual sem imagens.
 ESTILO_SIMBOLO = {
     "cereja": ("CER", (200, 30, 60)),
     "limao": ("LIM", (200, 180, 30)),
@@ -19,7 +17,7 @@ ESTILO_SIMBOLO = {
     "tigre": ("TIGRE", (235, 100, 20)),
     "sete": ("7", (60, 120, 255)),
 }
-PASTA_IMAGENS = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "assets")  # assets fica fora de src
+PASTA_IMAGENS = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "assets")
 
 SALDO_INICIAL = 1000
 APOSTA_MINIMA = 5       
@@ -79,6 +77,8 @@ class SlotsState(BaseState):
         self._fontes = {}
         self._imagens = self._carregar_imagens()   
         self._imagens_escaladas = {}               
+        self._fitas = [FITA] * NUM_ROLOS   # fita desenhada em cada rolo (muda no jackpot)
+        self._jackpot = False
 
         #tecla T ativa modo teste. força o símbolo da linha do meio (tecla X escolhe qual)
         self.modo_teste = False
@@ -121,9 +121,12 @@ class SlotsState(BaseState):
             elif event.key == pygame.K_DOWN:
                 self.valor_aposta = max(self.valor_aposta - PASSO_APOSTA, APOSTA_MINIMA)
             elif event.key == pygame.K_a:
-                # ALL-IN: aposta o máximo possível gira
+                #ALL-IN: aposta o máximo possível gira
                 self.valor_aposta = self._aposta_maxima()
                 self._iniciar_giro()
+            elif event.key == pygame.K_j:
+                #JACKPOT: 9 tigres na tela
+                self._iniciar_giro(jackpot=True)
             elif event.key == pygame.K_t:
                 self.modo_teste = not self.modo_teste
             elif event.key == pygame.K_x and self.modo_teste:
@@ -132,7 +135,7 @@ class SlotsState(BaseState):
                 self._iniciar_giro()
 
     # animacao
-    def _iniciar_giro(self):
+    def _iniciar_giro(self, jackpot=False):
         if self.mesa.saldo < self.mesa.custo_de(APOSTA_MINIMA):
             self.mesa.reiniciar(SALDO_INICIAL)
             self.valor_aposta = 10
@@ -145,11 +148,23 @@ class SlotsState(BaseState):
             self.mensagem = str(erro)
             return
 
-        forcadas = None
-        if self.modo_teste:
-            simbolo = self._simbolos[self.simbolo_forcado]
-            forcadas = [self.mesa.rolos.parada_do_simbolo(simbolo)] * NUM_ROLOS
-        resultado = self.mesa.sortear(forcadas)
+        self._jackpot = jackpot
+        if jackpot:
+            #grade toda de tigre cada rolo ganha uma fita com 3 tigres
+            parada = self.mesa.rolos.parada_do_simbolo(CORINGA)
+            resultado = self.mesa.sortear([parada] * NUM_ROLOS,
+                                          [[CORINGA] * NUM_LINHAS for _ in range(NUM_ROLOS)])
+            fita = list(FITA)
+            for k in (-1, 0, 1):
+                fita[(parada + k) % len(FITA)] = CORINGA
+            self._fitas = [fita] * NUM_ROLOS
+        else:
+            self._fitas = [FITA] * NUM_ROLOS
+            forcadas = None
+            if self.modo_teste:
+                simbolo = self._simbolos[self.simbolo_forcado]
+                forcadas = [self.mesa.rolos.parada_do_simbolo(simbolo)] * NUM_ROLOS
+            resultado = self.mesa.sortear(forcadas)
 
         for i, rolo in enumerate(self.rolos):
             rolo.iniciar(resultado.paradas[i] - 1, TEMPO_BASE + i * TEMPO_ENTRE_ROLOS)
@@ -168,7 +183,9 @@ class SlotsState(BaseState):
             self.girando = False
             n = len(self.mesa.resultado.vitorias)
             liquido = self.mesa.liquidar()
-            if liquido > 0:
+            if self._jackpot:
+                self.mensagem = f"JACKPOT! Você ganhou {liquido}!"
+            elif liquido > 0:
                 self.mensagem = f"{n} linha(s) premiada(s)! Você ganhou {liquido}!"
             elif n:
                 self.mensagem = f"{n} linha(s) premiada(s): a aposta foi devolvida."
@@ -234,7 +251,7 @@ class SlotsState(BaseState):
             base = math.floor(rolo.pos)
             frac = rolo.pos - base
             for r in range(-1, NUM_LINHAS + 1):
-                simbolo = FITA[(base + r) % n]
+                simbolo = self._fitas[i][(base + r) % n]
                 rect = pygame.Rect(coluna.left, coluna.top + int((r - frac) * celula), celula, celula)
                 self._desenhar_simbolo(surface, simbolo, rect)
             surface.set_clip(clip_antigo)
@@ -275,6 +292,7 @@ class SlotsState(BaseState):
             "SETAS CIMA/BAIXO: valor da aposta",
             "ESPAÇO: girar",
             "A: ALL-IN (aposta o máximo e gira)",
+            "J: JACKPOT (9 tigres)",
             "T: modo teste (X: símbolo forçado)",
             "ESC: voltar ao celular",
         ]
