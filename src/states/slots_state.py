@@ -19,7 +19,7 @@ ESTILO_SIMBOLO = {
     "tigre": ("TIGRE", (235, 100, 20)),
     "sete": ("7", (60, 120, 255)),
 }
-PASTA_IMAGENS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets")
+PASTA_IMAGENS = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "assets")  # assets fica fora de src
 
 SALDO_INICIAL = 1000
 APOSTA_MINIMA = 5       
