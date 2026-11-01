@@ -1,42 +1,36 @@
 import math
-
 import pygame
-
 import config
 from states.base_state import BaseState
-from modelos.slots import (
-    MesaSlots, FITA, LINHAS, PAGAMENTO, NUM_ROLOS, NUM_LINHAS,
-)
+from modelos.slots import (MesaSlots, FITA, LINHAS, PAGAMENTO, NUM_ROLOS, NUM_LINHAS,)
 
 COR_FUNDO = (38, 14, 18)
 COR_QUADRO = (28, 18, 20)
 COR_BORDA = (212, 175, 55)
 COR_AJUDA = (180, 180, 190)
-# Visual provisório (sem assets): rótulo + cor. Troque por imagens quando tiver sprites.
 ESTILO_SIMBOLO = {
     "cereja": ("CER", (200, 30, 60)),
     "limao": ("LIM", (200, 180, 30)),
-    "sino": ("SINO", (225, 150, 30)),
+    "saco": ("SACO", (225, 150, 30)),
     "tigre": ("TIGRE", (235, 100, 20)),
     "sete": ("7", (60, 120, 255)),
 }
+PASTA_IMAGENS = "assets/slots/"
 
 SALDO_INICIAL = 1000
-APOSTA_MINIMA = 5       # por linha (o custo da rodada é x5 linhas)
+APOSTA_MINIMA = 5       
 PASSO_APOSTA = 5
-VEL_GIRO = 22.0         # símbolos por segundo enquanto o rolo gira
-TEMPO_BASE = 0.9        # segundos até o 1º rolo começar a frear
+VEL_GIRO = 22.0         
+TEMPO_BASE = 0.9        
 TEMPO_ENTRE_ROLOS = 0.5
 TEMPO_FREIO = 0.45
 
-
 class Rolo:
-    """Só animação. `pos` = índice (float) do símbolo do topo; diminui => símbolos descem."""
 
     def __init__(self, tamanho_fita):
         self.n = tamanho_fita
         self.pos = 0.0
-        self.modo = "parado"    # girando | freando | parado
+        self.modo = "parado"   
         self._t = 0.0
         self._parar_em = 0.0
         self._alvo = 0
@@ -56,22 +50,16 @@ class Rolo:
             if self._t >= self._parar_em:
                 self.modo, self._t = "freando", 0.0
                 self._inicio = self.pos
-                # +1 volta completa para dar tempo de frear suavemente
                 self._dist = (self.pos - self._alvo) % self.n + self.n
         elif self.modo == "freando":
             self._t += dt
             t = min(self._t / TEMPO_FREIO, 1.0)
-            suave = 1 - (1 - t) ** 3  # ease-out cúbico, igual à roleta
+            suave = 1 - (1 - t) ** 3  
             self.pos = (self._inicio - self._dist * suave) % self.n
             if t >= 1.0:
                 self.pos, self.modo = float(self._alvo), "parado"
 
-
 class SlotsState(BaseState):
-    """Tela do Tigrinho: desenha os rolos, anima o giro e lê os comandos.
-
-    A regra do jogo fica em MesaSlots; aqui só há apresentação e input.
-    """
 
     def __init__(self, game, state_manager):
         super().__init__(state_manager)
@@ -84,20 +72,32 @@ class SlotsState(BaseState):
         self.girando = False
         self._relogio = 0.0
         self._fontes = {}
+        self._imagens = self._carregar_imagens()   
+        self._imagens_escaladas = {}               
 
-        # Modo teste (tecla T): força o símbolo da linha do meio (tecla X escolhe qual)
+        # Tecla 't' ativa modo teste: força o símbolo da linha do meio (tecla X escolhe qual)
         self.modo_teste = False
         self._simbolos = list(PAGAMENTO)
         self.simbolo_forcado = 0
 
+    @staticmethod
+    def _carregar_imagens():
+        
+        imagens = {}
+        for nome in ESTILO_SIMBOLO:
+            try:
+                imagens[nome] = pygame.image.load(f"{PASTA_IMAGENS}{nome}.png").convert_alpha()
+            except (pygame.error, FileNotFoundError):
+                pass
+        return imagens
+
     def _fonte(self, tamanho):
-        """Cache de fontes: a tela pode mudar de tamanho (F11, maximizar)."""
+
         tamanho = max(12, int(tamanho))
         if tamanho not in self._fontes:
             self._fontes[tamanho] = pygame.font.Font(None, tamanho)
         return self._fontes[tamanho]
 
-    # ---------- entrada ----------
     def _aposta_maxima(self):
         return max(APOSTA_MINIMA, self.mesa.saldo // len(LINHAS))
 
@@ -125,7 +125,7 @@ class SlotsState(BaseState):
             elif event.key in (pygame.K_SPACE, pygame.K_RETURN):
                 self._iniciar_giro()
 
-    # ---------- lógica da animação ----------
+    #animaçao
     def _iniciar_giro(self):
         if self.mesa.saldo < self.mesa.custo_de(APOSTA_MINIMA):
             self.mesa.reiniciar(SALDO_INICIAL)
@@ -143,10 +143,9 @@ class SlotsState(BaseState):
         if self.modo_teste:
             simbolo = self._simbolos[self.simbolo_forcado]
             forcadas = [self.mesa.rolos.parada_do_simbolo(simbolo)] * NUM_ROLOS
-        resultado = self.mesa.sortear(forcadas)  # resultado já decidido; a animação só o revela
+        resultado = self.mesa.sortear(forcadas) 
 
         for i, rolo in enumerate(self.rolos):
-            # a parada p mostra fita[p-1], fita[p], fita[p+1]: o topo é p-1
             rolo.iniciar(resultado.paradas[i] - 1, TEMPO_BASE + i * TEMPO_ENTRE_ROLOS)
         self.girando = True
         self.mensagem = "Girando..."
@@ -163,18 +162,26 @@ class SlotsState(BaseState):
             self.girando = False
             n = len(self.mesa.resultado.vitorias)
             liquido = self.mesa.liquidar()
-            if n:
+            if liquido > 0:
                 self.mensagem = f"{n} linha(s) premiada(s)! Você ganhou {liquido}!"
-            elif liquido == 0:
-                self.mensagem = "Empate. Aposta devolvida."
+            elif n:
+                self.mensagem = f"{n} linha(s) premiada(s): a aposta foi devolvida."
             else:
                 self.mensagem = f"Não foi dessa vez. Você perdeu {-liquido}."
             if self.mesa.saldo < self.mesa.custo_de(APOSTA_MINIMA):
                 self.mensagem += " Sem saldo: ESPAÇO para recomeçar."
             self.valor_aposta = max(APOSTA_MINIMA, min(self.valor_aposta, self._aposta_maxima()))
 
-    # ---------- desenho ----------
+    #imagens
     def _desenhar_simbolo(self, surface, simbolo, rect):
+        imagem = self._imagens.get(simbolo)
+        if imagem:
+            lado = int(rect.h * 0.92)
+            chave = (simbolo, lado)
+            if chave not in self._imagens_escaladas:  
+                self._imagens_escaladas[chave] = pygame.transform.smoothscale(imagem, (lado, lado))
+            surface.blit(self._imagens_escaladas[chave], self._imagens_escaladas[chave].get_rect(center=rect.center))
+            return
         rotulo, cor = ESTILO_SIMBOLO[simbolo]
         pygame.draw.rect(surface, cor, rect.inflate(-rect.w * 0.1, -rect.h * 0.1), border_radius=12)
         txt = self._fonte(rect.h * 0.34).render(rotulo, True, config.COLOR_WHITE)
@@ -218,7 +225,7 @@ class SlotsState(BaseState):
             coluna = pygame.Rect(quadro.left + margem + i * celula, quadro.top + margem,
                                  celula, celula * NUM_LINHAS)
             clip_antigo = surface.get_clip()
-            surface.set_clip(coluna)  # símbolos não vazam da coluna
+            surface.set_clip(coluna) 
             base = math.floor(rolo.pos)
             frac = rolo.pos - base
             for r in range(-1, NUM_LINHAS + 1):
@@ -242,7 +249,7 @@ class SlotsState(BaseState):
         quadro = self._desenhar_rolos(surface, (int(w * 0.32), int(h * 0.52)), celula)
 
         premios = "   ".join(f"{ESTILO_SIMBOLO[s][0]} x{p}" for s, p in PAGAMENTO.items())
-        txt = self._fonte(24).render(f"3 iguais pagam:  {premios}", True, COR_AJUDA)
+        txt = self._fonte(24).render(f"Linha completa paga:  {premios}   (TIGRE = coringa)", True, COR_AJUDA)
         surface.blit(txt, txt.get_rect(midtop=(quadro.centerx, quadro.bottom + 14)))
 
         x = int(w * 0.62)
