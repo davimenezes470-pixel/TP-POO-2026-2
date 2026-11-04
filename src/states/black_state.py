@@ -66,6 +66,10 @@ class BlackjackState(BaseState):
             self.valor_aposta = min(self.valor_aposta + PASSO_APOSTA, self.mesa.saldo)
         elif tecla == pygame.K_DOWN:
             self.valor_aposta = max(self.valor_aposta - PASSO_APOSTA, self._aposta_minima())
+        elif tecla == pygame.K_a:
+            # ALL-IN: aposta todo o saldo e já dá as cartas
+            self.valor_aposta = self.mesa.saldo
+            self._input_apostando(pygame.K_SPACE)
         elif tecla in (pygame.K_SPACE, pygame.K_RETURN):
             try:
                 self.mesa.apostar(self.valor_aposta)
@@ -266,7 +270,7 @@ class BlackjackState(BaseState):
     def _texto_ajuda(self):
         fase = self.mesa.fase
         if fase == APOSTANDO:
-            return ["SETAS CIMA/BAIXO: valor da aposta", "ESPAÇO: dar as cartas", "ESC: voltar ao menu"]
+            return ["SETAS CIMA/BAIXO: valor da aposta", "ESPAÇO: dar as cartas", "A: ALL-IN (aposta todo o saldo)", "ESC: voltar ao menu"]
         if fase == JOGADOR:
             linhas = ["H: pedir carta", "S: parar"]
             if self.mesa.pode_dobrar:

@@ -83,6 +83,11 @@ class RoletaState(BaseState):
                 self.valor_aposta = min(self.valor_aposta + 10, max(self.mesa.saldo, 10))
             elif event.key == pygame.K_DOWN:
                 self.valor_aposta = max(self.valor_aposta - 10, 10)
+            elif event.key == pygame.K_a:
+                # ALL-IN: aposta todo o saldo no tipo de aposta atual e já gira
+                if self.mesa.saldo > 0:
+                    self.valor_aposta = self.mesa.saldo
+                    self._iniciar_giro()
             elif event.key == pygame.K_t:
                 self.modo_teste = not self.modo_teste
             elif event.key == pygame.K_x and self.modo_teste:
@@ -205,6 +210,7 @@ class RoletaState(BaseState):
             "N ou SETAS ESQ/DIR: número",
             "SETAS CIMA/BAIXO: valor",
             "ESPAÇO: girar",
+            "A: ALL-IN (aposta todo o saldo e gira)",
             "T: modo teste (X: número forçado)",
             "ESC: voltar ao menu",
         ]
