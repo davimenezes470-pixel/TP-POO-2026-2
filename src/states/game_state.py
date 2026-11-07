@@ -1,7 +1,8 @@
 import pygame
 import config
 from states.base_state import BaseState
-from modelos.player import Player 
+from modelos.player import Player
+from utils.hud import desenhar_dinheiro 
 
 class GameState(BaseState):
 
@@ -50,6 +51,9 @@ class GameState(BaseState):
     def draw(self, surface):
         surface.blit(self.bg_image, (0, 0))
         self.all_sprites.draw(surface)
+
+        # HUD de dinheiro (canto superior direito)
+        desenhar_dinheiro(surface, self.game.player.carteira.saldo)
         
         # DEBUG (Apague depois)
         # Vermelho: O tamanho total da imagem (a sobra)
