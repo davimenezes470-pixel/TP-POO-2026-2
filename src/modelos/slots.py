@@ -79,11 +79,19 @@ def calcular_vitorias(grade, valor):
 #organiza cada rodada
 class MesaSlots:
 
-    def __init__(self, saldo_inicial=1000, rolos=None):
-        self.saldo = saldo_inicial
+    def __init__(self, carteira, rolos=None):
+        self.carteira = carteira
         self.rolos = rolos or Rolos()
         self.aposta = 0        
         self.resultado = None 
+
+    @property
+    def saldo(self):
+        return self.carteira.saldo
+
+    @saldo.setter
+    def saldo(self, valor):
+        self.carteira.saldo = valor
 
     @property
     def custo(self):
@@ -126,9 +134,8 @@ class MesaSlots:
         self.aposta = 0
         return liquido
 
-    def reiniciar(self, saldo_inicial=1000):
+    def reiniciar(self):
 
-        self.saldo = saldo_inicial
         self.aposta = 0
         self.resultado = None
 

@@ -12,6 +12,7 @@ from states.celular_state import CelularState
 import config
 from modelos.player import Player
 from states.slots_state import SlotsState
+from states.gameover_state import GameOverState
 
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(2)
@@ -45,6 +46,10 @@ class Game:
 
         self.player = Player(100, 720-512)
 
+        self.game_over_timer = None
+        self._criar_estados()
+
+    def _criar_estados(self):
         self.state_manager = StateManager()
         self.state_manager.add_state("Menu", MenuState(self, self.state_manager))
         self.state_manager.add_state("Jogo", GameState(self, self.state_manager))
@@ -52,7 +57,17 @@ class Game:
         self.state_manager.add_state("Roleta", RoletaState(self, self.state_manager))
         self.state_manager.add_state("Blackjack", BlackjackState(self, self.state_manager))
         self.state_manager.add_state("Tigrinho", SlotsState(self, self.state_manager))
+        self.state_manager.add_state("GameOver", GameOverState(self, self.state_manager))
         self.state_manager.change_state("Menu")
+
+    def agendar_game_over(self, atraso=2.0):
+        if self.game_over_timer is None:
+            self.game_over_timer = atraso
+
+    def novo_jogo(self):
+        self.player.carteira.reiniciar()
+        self.game_over_timer = None
+        self._criar_estados()
 
 
     def toggle_fullscreen(self):
@@ -87,6 +102,12 @@ class Game:
 
             self.process_events()
             self.state_manager.update(dt)
+
+            if self.game_over_timer is not None:
+                self.game_over_timer -= dt
+                if self.game_over_timer <= 0:
+                    self.game_over_timer = None
+                    self.state_manager.change_state("GameOver")
 
             self.screen.fill(getattr(config, 'COLOR_BG', (24, 24, 28)))
             self.state_manager.draw(self.screen)
