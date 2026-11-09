@@ -18,7 +18,7 @@ from states.slots_state import SlotsState
 from states.gameover_state import GameOverState
 from core.tracker import Tracker
 from states.runs_state import RunsState
-
+from states.aviso_state import AvisoState
 
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(2)
@@ -72,6 +72,7 @@ class Game:
                 "texto": "AGIOTA: Vou levar esse carro como garantia do meu pagamento"
             }
         ]
+        self.state_manager.add_state("Aviso", AvisoState(self, self.state_manager))
         self.state_manager.add_state("Intro", CutsceneState(self, self.state_manager, cenas_intro, "CasaFora"))
         self.state_manager.add_state("Menu", MenuState(self, self.state_manager))
         self.state_manager.add_state("Jogo", GameState(self, self.state_manager))

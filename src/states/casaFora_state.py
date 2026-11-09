@@ -15,6 +15,7 @@ class CasaForaState(BaseState):
         self.bg_image = pygame.transform.scale(imagem_original, self.game.screen.get_size())        
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.game.player)
+        self.fonte_aviso = pygame.font.Font(None, 32)
 
     def process_events(self, events):
         for event in events:
@@ -44,3 +45,18 @@ class CasaForaState(BaseState):
         surface.blit(self.bg_image, (0, 0))
         self.all_sprites.draw(surface)
         desenhar_dinheiro(surface, self.game.player.carteira.saldo)
+        
+        # --- DESENHA O AVISO SOBRE O JOGADOR ---
+        texto = "Aperte F para entrar em casa"
+        sombra = self.fonte_aviso.render(texto, True, (0, 0, 0))
+        branco = self.fonte_aviso.render(texto, True, (255, 255, 255))
+        
+        # Usa o top do 'rect' para a mensagem ficar acima da cabeça
+        x_centro = self.game.player.rect.centerx
+        y_base = self.game.player.rect.top - 10
+        
+        rect_branco = branco.get_rect(midbottom=(x_centro, y_base))
+        rect_sombra = sombra.get_rect(midbottom=(x_centro + 2, y_base + 2))
+        
+        surface.blit(sombra, rect_sombra)
+        surface.blit(branco, rect_branco)

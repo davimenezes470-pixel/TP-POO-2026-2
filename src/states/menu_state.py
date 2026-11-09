@@ -34,7 +34,7 @@ class MenuState(BaseState):
 
     def _select_option(self):
         if self.selected_index == 0:
-            self.state_manager.change_state("Intro")
+            self.state_manager.change_state("Aviso")
         elif self.selected_index == 1:
             self.game.origem_runs = "Menu"
             self.state_manager.change_state("Runs")

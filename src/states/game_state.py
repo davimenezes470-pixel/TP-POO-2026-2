@@ -1,6 +1,7 @@
 import pygame
 import config
 from states.base_state import BaseState
+from modelos.esposa import Esposa
 from modelos.filha import Filha
 from utils.hud import desenhar_dinheiro 
 
@@ -24,10 +25,12 @@ class GameState(BaseState):
        
         self.all_sprites = pygame.sprite.OrderedUpdates()
         self.filha = Filha(150, base_do_pai-110)
+        self.esposa = Esposa(1200, base_do_pai-110)
         # --- GRUPOS DE SPRITES ---
         self.all_sprites.add(self.filha)
+        self.all_sprites.add(self.esposa)
         self.all_sprites.add(self.game.player)
-        
+        self.fonte_aviso = pygame.font.Font(None, 32)
 
     def process_events(self, events):
         for event in events:
@@ -55,6 +58,21 @@ class GameState(BaseState):
         elif self.game.player.hitbox.right > largura_tela:
             self.game.player.hitbox.right = largura_tela
             self.game.player.pos_x = float(self.game.player.hitbox.x)
+
+    def _desenhar_aviso(self, surface, texto, alvo_rect):
+        """Método utilitário para desenhar texto com sombra sobre um personagem."""
+        sombra = self.fonte_aviso.render(texto, True, (0, 0, 0))
+        branco = self.fonte_aviso.render(texto, True, (255, 255, 255))
+        
+        # Alinha pela metade horizontal do personagem, e um pouco acima da cabeça (top)
+        x_centro = alvo_rect.centerx
+        y_base = alvo_rect.top - 10
+        
+        rect_branco = branco.get_rect(midbottom=(x_centro, y_base))
+        rect_sombra = sombra.get_rect(midbottom=(x_centro + 2, y_base + 2))
+        
+        surface.blit(sombra, rect_sombra)
+        surface.blit(branco, rect_branco)
         
     def draw(self, surface):
         surface.blit(self.bg_image, (0, 0))
@@ -62,9 +80,11 @@ class GameState(BaseState):
 
         # HUD de dinheiro (canto superior direito)
         desenhar_dinheiro(surface, self.game.player.carteira.saldo)
+        # Se as hitboxes do jogador e da filha se tocarem, desenha o aviso sobre ela
+        if self.game.player.hitbox.colliderect(self.filha.hitbox):
+            self._desenhar_aviso(surface, "Aperte E para falar com filha", self.filha.rect)
+            
+        # Se as hitboxes do jogador e da esposa se tocarem, desenha o aviso sobre ela
+        if self.game.player.hitbox.colliderect(self.esposa.hitbox):
+            self._desenhar_aviso(surface, "Aperte E para falar com esposa", self.esposa.rect)
         
-        # DEBUG (Apague depois)
-        # Vermelho: O tamanho total da imagem (a sobra)
-        #pygame.draw.rect(surface, (255, 0, 0), self.game.player.rect, 1)
-        # Verde: A Hitbox real de colisão (o corpo)
-        #pygame.draw.rect(surface, (0, 255, 0), self.game.player.hitbox, 2)
