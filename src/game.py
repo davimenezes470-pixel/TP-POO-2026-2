@@ -9,6 +9,7 @@ from states.game_state import GameState
 from states.roleta_state import RoletaState
 from states.black_state import BlackjackState
 from states.celular_state import CelularState
+from states.casaFora_state import CasaForaState
 import config
 from modelos.player import Player
 from states.slots_state import SlotsState
@@ -38,13 +39,15 @@ class Game:
 
         screen_max = pygame.display.get_wm_info().get('window')
         if screen_max:
-            ctypes.windll.user32.ShowWindow(screen_max, 3)
+            try:
+                ctypes.windll.user32.ShowWindow(screen_max, 3)
+            except Exception:
+                pass
 
+        self.player = Player(100, 720-512)
 
         self.clock = pygame.time.Clock()
         self.running = True
-
-        self.player = Player(100, 720-512)
 
         self.game_over_timer = None
         self._criar_estados()
@@ -58,6 +61,7 @@ class Game:
         self.state_manager.add_state("Blackjack", BlackjackState(self, self.state_manager))
         self.state_manager.add_state("Tigrinho", SlotsState(self, self.state_manager))
         self.state_manager.add_state("GameOver", GameOverState(self, self.state_manager))
+        self.state_manager.add_state("CasaFora", CasaForaState(self, self.state_manager))
         self.state_manager.change_state("Menu")
 
     def agendar_game_over(self, atraso=2.0):

@@ -14,3 +14,7 @@ env/
 # ---SO---
 .DS_Store
 Thumbs.db
+
+__MACOSX/
+*.psd
+*.url
