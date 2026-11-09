@@ -13,7 +13,6 @@ COR_DICA = (150, 155, 175)
 
 HOME = "home"
 JOGOS = "jogos"
-RUNS = "runs"
 
 
 class CelularState(BaseState):
@@ -94,7 +93,9 @@ class CelularState(BaseState):
             if chave == "jogos":
                 self.tela, self.indice = JOGOS, 0
             elif chave == "runs":
-                self.tela = RUNS
+                # Salva a origem e leva para o arquivo de estado real
+                self.game.origem_runs = "Celular"
+                self.state_manager.change_state("Runs")
             else:
                 self._sair()
         elif self.tela == JOGOS:
@@ -137,15 +138,11 @@ class CelularState(BaseState):
         notch.midtop = (tela.centerx, tela.top + int(largura * 0.03))
         pygame.draw.rect(surface, COR_CORPO, notch, border_radius=int(largura * 0.025))
 
-        titulo = {HOME: "Início", JOGOS: "Jogos", RUNS: "Runs"}[self.tela]
+        titulo = {HOME: "Início", JOGOS: "Jogos"}[self.tela]
         txt = self._fonte(tela.w * 0.09).render(titulo, True, COR_TEXTO)
         surface.blit(txt, txt.get_rect(midtop=(tela.centerx, tela.top + int(tela.h * 0.08))))
 
-        if self.tela == RUNS:
-            msg = self._fonte(tela.w * 0.07).render("Em breve", True, COR_DICA)
-            surface.blit(msg, msg.get_rect(center=tela.center))
-        else:
-            self._desenhar_icones(surface, tela)
+        self._desenhar_icones(surface, tela)
 
         dica = "SETAS: escolher   ENTER: abrir   ESC: voltar"
         txt = self._fonte(tela.w * 0.045).render(dica, True, COR_DICA)

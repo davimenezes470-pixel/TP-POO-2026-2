@@ -4,10 +4,10 @@ from modelos.carteira import Carteira
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, tracker = None):
         super().__init__()
 
-        self.carteira = Carteira(config.SALDO_INICIAL)
+        self.carteira = Carteira(config.SALDO_INICIAL, tracker)
         # --- CONFIGURAÇÕES DE SPRITE ---
         self.frame_width = 128
         self.frame_height = 128

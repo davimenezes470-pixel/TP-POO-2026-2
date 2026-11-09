@@ -1,7 +1,7 @@
 import pygame
 import config
 from states.base_state import BaseState
-from modelos.player import Player
+from modelos.filha import Filha
 from utils.hud import desenhar_dinheiro 
 
 class GameState(BaseState):
@@ -19,10 +19,15 @@ class GameState(BaseState):
         
         # 3. Escala a imagem (de 1920x1080) para o tamanho exato da janela do jogo (ex: 1280x720)
         self.bg_image = pygame.transform.scale(imagem_original, tamanho_tela)
-        
+
+        base_do_pai = self.game.player.rect.bottom
+       
+        self.all_sprites = pygame.sprite.OrderedUpdates()
+        self.filha = Filha(150, base_do_pai-110)
         # --- GRUPOS DE SPRITES ---
-        self.all_sprites = pygame.sprite.Group()
+        self.all_sprites.add(self.filha)
         self.all_sprites.add(self.game.player)
+        
 
     def process_events(self, events):
         for event in events:

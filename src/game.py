@@ -15,6 +15,9 @@ from modelos.player import Player
 from states.cutscene_state import CutsceneState
 from states.slots_state import SlotsState
 from states.gameover_state import GameOverState
+from core.tracker import Tracker
+from states.runs_state import RunsState
+
 
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(2)
@@ -45,7 +48,10 @@ class Game:
             except Exception:
                 pass
 
-        self.player = Player(100, 720-512)
+        self.tracker = Tracker()                
+        self.tracker.adicionar_run()
+
+        self.player = Player(100, 720-512, self.tracker)
 
         self.clock = pygame.time.Clock()
         self.running = True
@@ -74,6 +80,7 @@ class Game:
         self.state_manager.add_state("Tigrinho", SlotsState(self, self.state_manager))
         self.state_manager.add_state("GameOver", GameOverState(self, self.state_manager))
         self.state_manager.add_state("CasaFora", CasaForaState(self, self.state_manager))
+        self.state_manager.add_state("Runs", RunsState(self, self.state_manager))
         self.state_manager.change_state("Menu")
 
     def agendar_game_over(self, atraso=2.0):
@@ -81,6 +88,7 @@ class Game:
             self.game_over_timer = atraso
 
     def novo_jogo(self):
+        self.tracker.adicionar_run()
         self.player.carteira.reiniciar()
         self.game_over_timer = None
         self._criar_estados()
