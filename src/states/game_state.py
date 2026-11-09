@@ -87,4 +87,12 @@ class GameState(BaseState):
         # Se as hitboxes do jogador e da esposa se tocarem, desenha o aviso sobre ela
         if self.game.player.hitbox.colliderect(self.esposa.hitbox):
             self._desenhar_aviso(surface, "Aperte E para falar com esposa", self.esposa.rect)
-        
+
+        w, h = surface.get_size()
+        texto_celular = "Aperte C para abrir o celular"
+        sombra_cel = self.fonte_aviso.render(texto_celular, True, (0, 0, 0))
+        branco_cel = self.fonte_aviso.render(texto_celular, True, (200, 200, 220))
+
+        # Posiciona com 20 pixels de margem da esquerda e de baixo
+        surface.blit(sombra_cel, (22, h - 48))
+        surface.blit(branco_cel, (20, h - 50))
