@@ -35,6 +35,7 @@ class Tracker:
             "numero": numero_nova_run,
             "ganhos": 0,
             "perdas": 0,
+            "dias_jogados": 1,
             "jogos": {
                 "Roleta": 0,
                 "Blackjack": 0,
@@ -42,6 +43,8 @@ class Tracker:
             }
         }
         self.dados["runs"].append(nova_run)
+        self.dia_atual = 1
+        self.apostas_hoje = 0
         self.salvar()
 
     def registrar_dinheiro(self, diferenca):
@@ -64,4 +67,12 @@ class Tracker:
         run_atual = self.dados["runs"][-1]
         if nome_jogo in run_atual["jogos"]:
             run_atual["jogos"][nome_jogo] += 1
+        self.apostas_hoje += 1
+        self.salvar()
+    def avancar_dia(self):
+        """Método novo chamado pela cutscene da noite."""
+        self.dia_atual += 1
+        self.apostas_hoje = 0
+        if self.dados["runs"]:
+            self.dados["runs"][-1]["dias_jogados"] = self.dia_atual
         self.salvar()

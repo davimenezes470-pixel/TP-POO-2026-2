@@ -50,13 +50,14 @@ class RunsState(BaseState):
             
             # Textos a serem exibidos
             textos = [
-                (self.fonte_titulo, f"RUN #{run['numero']}", config.COLOR_WHITE, -160),
-                (self.fonte_texto, f"Dinheiro Ganho: R$ {run['ganhos']:,}", (100, 220, 120), -80),
-                (self.fonte_texto, f"Dinheiro Perdido: R$ {run['perdas']:,}", (220, 100, 100), -30),
-                (self.fonte_texto, "--- Quantidade de Jogadas ---", (180, 180, 180), 30),
-                (self.fonte_texto, f"Roleta: {run['jogos']['Roleta']}", config.COLOR_WHITE, 80),
-                (self.fonte_texto, f"Blackjack: {run['jogos']['Blackjack']}", config.COLOR_WHITE, 120),
-                (self.fonte_texto, f"Tigrinho: {run['jogos']['Tigrinho']}", config.COLOR_WHITE, 160)
+                (self.fonte_titulo, f"RUN #{run['numero']}", config.COLOR_WHITE, -190),
+                (self.fonte_texto, f"Dias apostando: {run.get('dias_jogados', 1)}", (200, 200, 255), -120),
+                (self.fonte_texto, f"Dinheiro Ganho: R$ {run['ganhos']:,}", (100, 220, 120), -70),
+                (self.fonte_texto, f"Dinheiro Perdido: R$ {run['perdas']:,}", (220, 100, 100), -20),
+                (self.fonte_texto, "--- Quantidade de Jogadas ---", (180, 180, 180), 40),
+                (self.fonte_texto, f"Roleta: {run['jogos']['Roleta']}", config.COLOR_WHITE, 90),
+                (self.fonte_texto, f"Blackjack: {run['jogos']['Blackjack']}", config.COLOR_WHITE, 130),
+                (self.fonte_texto, f"Tigrinho: {run['jogos']['Tigrinho']}", config.COLOR_WHITE, 170)
             ]
 
             for fonte, texto, cor, offset_y in textos:

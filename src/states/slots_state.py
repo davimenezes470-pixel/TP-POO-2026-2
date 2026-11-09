@@ -131,7 +131,11 @@ class SlotsState(BaseState):
             elif event.key == pygame.K_x and self.modo_teste:
                 self.simbolo_forcado = (self.simbolo_forcado + 1) % len(self._simbolos)
             elif event.key in (pygame.K_SPACE, pygame.K_RETURN):
-                self._iniciar_giro()
+                if self.game.tracker.apostas_hoje >= 10:
+                    self.state_manager.change_state("Noite")
+                    self.mensagem = "Escolha o valor da aposta e pressione ESPAÇO."
+                else:
+                    self._iniciar_giro()
 
     # animacao
     def _iniciar_giro(self, jackpot=False):
@@ -188,6 +192,8 @@ class SlotsState(BaseState):
             if self.mesa.saldo < self.mesa.custo_de(APOSTA_MINIMA):
                 self.mensagem += " Sem saldo!"
                 self.game.agendar_game_over()
+            elif self.game.tracker.apostas_hoje >= 10:
+                self.mensagem += " Anoiteceu. ESPAÇO: ir dormir."
             self.valor_aposta = max(APOSTA_MINIMA, min(self.valor_aposta, self._aposta_maxima()))
 
     def _desenhar_simbolo(self, surface, simbolo, rect):
@@ -293,3 +299,4 @@ class SlotsState(BaseState):
         ]
         for n, linha in enumerate(ajuda):
             self._linha(surface, linha, (x, int(h * 0.64) + n * 30), 22, COR_AJUDA)
+        self._linha(surface, f"Apostas hoje: {self.game.tracker.apostas_hoje}/10", (x, int(h * 0.38)), 24, COR_AJUDA)

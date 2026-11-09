@@ -83,7 +83,10 @@ class RoletaState(BaseState):
                 self.valor_aposta = max(self.valor_aposta - 10, 10)
             elif event.key == pygame.K_a:
                 # ALL-IN: aposta todo o saldo no tipo de aposta atual e já gira
-                if self.mesa.saldo > 0:
+                if self.game.tracker.apostas_hoje >= 10:
+                    self.state_manager.change_state("Noite")
+                    self.mensagem = "Escolha uma aposta e pressione ESPAÇO."
+                elif self.mesa.saldo > 0:
                     self.valor_aposta = self.mesa.saldo
                     self._iniciar_giro()
             elif event.key == pygame.K_t:
@@ -91,7 +94,11 @@ class RoletaState(BaseState):
             elif event.key == pygame.K_x and self.modo_teste:
                 self.numero_forcado = (self.numero_forcado + 1) % 37
             elif event.key == pygame.K_SPACE:
-                self._iniciar_giro()
+                if self.game.tracker.apostas_hoje >= 10:
+                    self.state_manager.change_state("Noite")
+                    self.mensagem = "Escolha uma aposta e pressione ESPAÇO."
+                else:
+                    self._iniciar_giro()
 
     def _criar_aposta(self):
         if self.tipo_aposta in ("vermelho", "preto"):
@@ -144,6 +151,8 @@ class RoletaState(BaseState):
             if self.mesa.saldo < 10:
                 self.mensagem += " Sem saldo!"
                 self.game.agendar_game_over()
+            elif self.game.tracker.apostas_hoje >= 10:
+                self.mensagem += " Anoiteceu. ESPAÇO: ir dormir."
             self.valor_aposta = max(10, min(self.valor_aposta, self.mesa.saldo))
 
     # ---------- desenho ----------
@@ -217,3 +226,4 @@ class RoletaState(BaseState):
         ]
         for n, linha in enumerate(ajuda):
             self._linha(surface, linha, (x, int(h * 0.60) + n * 30), self.font_num, (180, 180, 190))
+        self._linha(surface, f"Apostas hoje: {self.game.tracker.apostas_hoje}/10", (x, int(h * 0.40)), self.font_num, (180, 180, 190))

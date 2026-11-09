@@ -70,6 +70,10 @@ class BlackjackState(BaseState):
             self.valor_aposta = self.mesa.saldo
             self._input_apostando(pygame.K_SPACE)
         elif tecla in (pygame.K_SPACE, pygame.K_RETURN):
+            if self.game.tracker.apostas_hoje >= 10:
+                self.state_manager.change_state("Noite")
+                self.mensagem = "Escolha o valor da aposta e pressione ESPAÇO."
+                return
             try:
                 self.mesa.apostar(self.valor_aposta)
             except ValueError as erro:
@@ -99,9 +103,12 @@ class BlackjackState(BaseState):
         self._sincronizar()
 
     def _proxima_rodada(self):
+        if self.game.tracker.apostas_hoje >= 10:
+            self.state_manager.change_state("Noite")
+            self.mesa.nova_rodada()
+            self.mensagem = "Escolha o valor da aposta e pressione ESPAÇO."
+            return
         self.mesa.nova_rodada()
-        self.valor_aposta = max(self._aposta_minima(), min(self.valor_aposta, self.mesa.saldo))
-        self.mensagem = "Escolha o valor da aposta e pressione ESPAÇO."
 
     def update(self, dt):
         if self.mesa.fase != DEALER:
@@ -135,6 +142,8 @@ class BlackjackState(BaseState):
         if mesa.saldo <= 0:
             texto += " Sem saldo!"
             self.game.agendar_game_over()
+        elif self.game.tracker.apostas_hoje >= 10:
+            texto += " Anoiteceu. ESPAÇO: ir dormir."
         else:
             texto += " ESPAÇO: nova rodada."
         self.mensagem = texto
@@ -249,7 +258,8 @@ class BlackjackState(BaseState):
         ajuda = self._texto_ajuda()
         for n, linha in enumerate(ajuda):
             self._linha(surface, linha, (x, int(h * 0.62) + n * 32), 26, COR_AJUDA)
-
+        #contagem de apostas
+        self._linha(surface, f"Apostas hoje: {self.game.tracker.apostas_hoje}/10", (x, int(h * 0.32)), 28, COR_AJUDA)
     def _desenhar_texto_quebrado(self, surface, texto, x, y, largura_max, cor):
         fonte = self._fonte(32)
         linha, linhas = "", []

@@ -10,6 +10,7 @@ from states.roleta_state import RoletaState
 from states.black_state import BlackjackState
 from states.celular_state import CelularState
 from states.casaFora_state import CasaForaState
+from states.noite_state import NoiteState
 import config
 from modelos.player import Player
 from states.cutscene_state import CutsceneState
@@ -79,6 +80,7 @@ class Game:
         self.state_manager.add_state("Blackjack", BlackjackState(self, self.state_manager))
         self.state_manager.add_state("Tigrinho", SlotsState(self, self.state_manager))
         self.state_manager.add_state("GameOver", GameOverState(self, self.state_manager))
+        self.state_manager.add_state("Noite", NoiteState(self, self.state_manager))
         self.state_manager.add_state("CasaFora", CasaForaState(self, self.state_manager))
         self.state_manager.add_state("Runs", RunsState(self, self.state_manager))
         self.state_manager.change_state("Menu")
