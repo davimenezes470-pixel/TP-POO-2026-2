@@ -60,6 +60,6 @@ class GameState(BaseState):
         
         # DEBUG (Apague depois)
         # Vermelho: O tamanho total da imagem (a sobra)
-        pygame.draw.rect(surface, (255, 0, 0), self.game.player.rect, 1)
+        #pygame.draw.rect(surface, (255, 0, 0), self.game.player.rect, 1)
         # Verde: A Hitbox real de colisão (o corpo)
-        pygame.draw.rect(surface, (0, 255, 0), self.game.player.hitbox, 2)
+        #pygame.draw.rect(surface, (0, 255, 0), self.game.player.hitbox, 2)

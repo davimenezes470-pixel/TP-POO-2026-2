@@ -34,7 +34,7 @@ class MenuState(BaseState):
 
     def _select_option(self):
         if self.selected_index == 0:
-            self.state_manager.change_state("Jogo")
+            self.state_manager.change_state("Intro")
         elif self.selected_index == 1:
             self.state_manager.change_state("Runs")
         elif self.selected_index == 2:

@@ -12,6 +12,7 @@ from states.celular_state import CelularState
 from states.casaFora_state import CasaForaState
 import config
 from modelos.player import Player
+from states.cutscene_state import CutsceneState
 from states.slots_state import SlotsState
 from states.gameover_state import GameOverState
 
@@ -54,6 +55,17 @@ class Game:
 
     def _criar_estados(self):
         self.state_manager = StateManager()
+        cenas_intro = [
+            {
+                "imagem": 'assets/casacutscene.png',
+                "texto": "AGIOTA: Essa é a ultima vez que te empresto dinheiro!!"
+            },
+            {
+                "imagem": 'assets/casacutscene.png', 
+                "texto": "AGIOTA: Vou levar esse carro como garantia do meu pagamento"
+            }
+        ]
+        self.state_manager.add_state("Intro", CutsceneState(self, self.state_manager, cenas_intro, "CasaFora"))
         self.state_manager.add_state("Menu", MenuState(self, self.state_manager))
         self.state_manager.add_state("Jogo", GameState(self, self.state_manager))
         self.state_manager.add_state("Celular", CelularState(self, self.state_manager))
