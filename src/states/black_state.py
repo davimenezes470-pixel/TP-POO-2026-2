@@ -75,6 +75,7 @@ class BlackjackState(BaseState):
             except ValueError as erro:
                 self.mensagem = str(erro)
                 return
+            self.game.tracker.registrar_jogada("Blackjack")
             self._tempo_dealer = 0.0
             self.mensagem = "Sua vez: H pedir, S parar" + (", D dobrar." if self.mesa.pode_dobrar else ".")
             self._sincronizar()

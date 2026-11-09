@@ -7,7 +7,7 @@ CAMINHO_ARQUIVO = os.path.join(RAIZ, "runs_data.json")
 
 class Tracker:
     def __init__(self):
-        self.dados = {"runs": 0, "ganhos": 0, "perdas": 0}
+        self.dados = {"runs": []}
         self.carregar()
 
     def carregar(self):
@@ -15,7 +15,11 @@ class Tracker:
         if os.path.exists(CAMINHO_ARQUIVO):
             try:
                 with open(CAMINHO_ARQUIVO, "r", encoding="utf-8") as f:
-                    self.dados = json.load(f)
+                    dados_salvos = json.load(f)
+                    if "runs" in dados_salvos and isinstance(dados_salvos["runs"], list):
+                        self.dados = dados_salvos
+                    else:
+                        self.dados = {"runs": []}
             except:
                 pass
 
@@ -25,15 +29,39 @@ class Tracker:
             json.dump(self.dados, f, indent=4)
 
     def adicionar_run(self):
-        """Adiciona +1 ao total de runs jogadas."""
-        self.dados["runs"] += 1
+        """Cria uma nova run no histórico."""
+        numero_nova_run = len(self.dados["runs"]) + 1
+        nova_run = {
+            "numero": numero_nova_run,
+            "ganhos": 0,
+            "perdas": 0,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        }
+        self.dados["runs"].append(nova_run)
         self.salvar()
 
     def registrar_dinheiro(self, diferenca):
-        """Avalia se o dinheiro foi ganho ou perdido e soma no histórico."""
+        """Adiciona ganhos ou perdas na run atual (a última da lista)."""
+        if not self.dados["runs"]:
+            return
+            
+        run_atual = self.dados["runs"][-1]
+        
         if diferenca > 0:
-            self.dados["ganhos"] += diferenca
+            run_atual["ganhos"] += diferenca
         elif diferenca < 0:
-            # Guardamos o valor positivo da perda
-            self.dados["perdas"] += abs(diferenca)
+            run_atual["perdas"] += abs(diferenca)
+        self.salvar()
+    def registrar_jogada(self, nome_jogo):
+        """Registra que um jogo foi jogado na run atual."""
+        if not self.dados["runs"]:
+            return
+            
+        run_atual = self.dados["runs"][-1]
+        if nome_jogo in run_atual["jogos"]:
+            run_atual["jogos"][nome_jogo] += 1
         self.salvar()

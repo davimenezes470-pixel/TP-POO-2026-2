@@ -1,7 +1,5 @@
 import math
-
 import pygame
-
 import config
 from states.base_state import BaseState
 from modelos.roleta import (
@@ -109,6 +107,8 @@ class RoletaState(BaseState):
         except ValueError as erro:
             self.mensagem = str(erro)
             return
+
+        self.game.tracker.registrar_jogada("Roleta")
 
         forcado = self.numero_forcado if self.modo_teste else None
         casa = self.mesa.sortear(forcado)  # resultado já decidido; a animação só o revela

@@ -140,7 +140,8 @@ class SlotsState(BaseState):
         except ValueError as erro:
             self.mensagem = str(erro)
             return
-
+        self.game.tracker.registrar_jogada("Tigrinho")
+        
         self._jackpot = jackpot
         if jackpot:
             #grade toda de tigre cada rolo ganha uma fita com 3 tigres
