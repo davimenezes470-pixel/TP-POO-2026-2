@@ -148,11 +148,18 @@ class MesaRoleta:
     a roda antes de mostrar o novo saldo.
     """
 
-    def __init__(self, saldo_inicial=1000, roleta=None):
-        self.saldo = saldo_inicial
+    def __init__(self, carteira, roleta=None):
+        self.carteira = carteira
         self.roleta = roleta or Roleta()
         self.aposta = None
         self.casa_sorteada = None
+    @property
+    def saldo(self):
+        return self.carteira.saldo
+
+    @saldo.setter
+    def saldo(self, valor):
+        self.carteira.saldo = valor
 
     def apostar(self, aposta):
         if self.aposta is not None:

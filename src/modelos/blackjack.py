@@ -131,8 +131,8 @@ class MesaBlackjack:
     interface poder animar uma carta de cada vez.
     """
 
-    def __init__(self, saldo_inicial=1000, baralho=None):
-        self.saldo = saldo_inicial
+    def __init__(self, carteira, baralho=None):
+        self.carteira = carteira
         self.baralho = baralho or Baralho()
         self.jogador = Mao()
         self.dealer = Mao()
@@ -142,6 +142,14 @@ class MesaBlackjack:
         # Preenchidos quando a rodada termina
         self.resultado = None   # "blackjack" | "vitoria" | "empate" | "derrota"
         self.liquido = 0        # ganho líquido da rodada (negativo = perdeu)
+
+    @property
+    def saldo(self):
+        return self.carteira.saldo
+
+    @saldo.setter
+    def saldo(self, valor):
+        self.carteira.saldo = valor
 
     # ---------- consultas ----------
     @property
@@ -255,7 +263,6 @@ class MesaBlackjack:
 
     def reiniciar(self, saldo_inicial=1000):
         """Recomeça do zero (usado quando o saldo acaba)."""
-        self.saldo = saldo_inicial
         self.jogador.limpar()
         self.dealer.limpar()
         self.aposta = 0

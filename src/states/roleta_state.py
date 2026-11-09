@@ -28,7 +28,7 @@ class RoletaState(BaseState):
     def __init__(self, game, state_manager):
         super().__init__(state_manager)
         self.game = game
-        self.mesa = MesaRoleta(saldo_inicial=1000)
+        self.mesa = MesaRoleta(self.game.player.carteira)
 
         self.font_num = pygame.font.Font(None, 22)
         self.font_txt = pygame.font.Font(None, 32)
@@ -141,8 +141,9 @@ class RoletaState(BaseState):
                 self.mensagem = f"Saiu {casa.numero} ({casa.cor}). Você ganhou {liquido}!"
             else:
                 self.mensagem = f"Saiu {casa.numero} ({casa.cor}). Você perdeu {-liquido}."
-            if self.mesa.saldo <= 0:
-                self.mensagem += " Sem saldo."
+            if self.mesa.saldo < 10:
+                self.mensagem += " Sem saldo!"
+                self.game.agendar_game_over()
             self.valor_aposta = max(10, min(self.valor_aposta, self.mesa.saldo))
 
     # ---------- desenho ----------

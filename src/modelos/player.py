@@ -1,10 +1,13 @@
 import pygame
+import config
+from modelos.carteira import Carteira
 
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         super().__init__()
 
+        self.carteira = Carteira(config.SALDO_INICIAL)
         # --- CONFIGURAÇÕES DE SPRITE ---
         self.frame_width = 128
         self.frame_height = 128

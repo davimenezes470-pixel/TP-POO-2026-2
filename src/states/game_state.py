@@ -1,7 +1,8 @@
 import pygame
 import config
 from states.base_state import BaseState
-from modelos.player import Player 
+from modelos.player import Player
+from utils.hud import desenhar_dinheiro 
 
 class GameState(BaseState):
 
@@ -28,8 +29,11 @@ class GameState(BaseState):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.state_manager.change_state("Menu")
-                if event.key == pygame.K_c:
+                elif event.key == pygame.K_c:
                     self.state_manager.change_state("Celular")
+                elif event.key == pygame.K_f:
+                    # Vai para o lado de fora
+                    self.state_manager.change_state("CasaFora")
 
     def update(self, dt):
         self.all_sprites.update(dt)
@@ -50,9 +54,12 @@ class GameState(BaseState):
     def draw(self, surface):
         surface.blit(self.bg_image, (0, 0))
         self.all_sprites.draw(surface)
+
+        # HUD de dinheiro (canto superior direito)
+        desenhar_dinheiro(surface, self.game.player.carteira.saldo)
         
         # DEBUG (Apague depois)
         # Vermelho: O tamanho total da imagem (a sobra)
-        pygame.draw.rect(surface, (255, 0, 0), self.game.player.rect, 1)
+        #pygame.draw.rect(surface, (255, 0, 0), self.game.player.rect, 1)
         # Verde: A Hitbox real de colisão (o corpo)
-        pygame.draw.rect(surface, (0, 255, 0), self.game.player.hitbox, 2)
+        #pygame.draw.rect(surface, (0, 255, 0), self.game.player.hitbox, 2)

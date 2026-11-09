@@ -19,7 +19,6 @@ ESTILO_SIMBOLO = {
 }
 PASTA_IMAGENS = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "assets")
 
-SALDO_INICIAL = 1000
 APOSTA_MINIMA = 5       
 PASSO_APOSTA = 5
 VEL_GIRO = 22.0      
@@ -67,7 +66,7 @@ class SlotsState(BaseState):
     def __init__(self, game, state_manager):
         super().__init__(state_manager)
         self.game = game
-        self.mesa = MesaSlots(saldo_inicial=SALDO_INICIAL)
+        self.mesa = MesaSlots(self.game.player.carteira)
         self.rolos = [Rolo(len(FITA)) for _ in range(NUM_ROLOS)]
 
         self.valor_aposta = 10
@@ -136,12 +135,6 @@ class SlotsState(BaseState):
 
     # animacao
     def _iniciar_giro(self, jackpot=False):
-        if self.mesa.saldo < self.mesa.custo_de(APOSTA_MINIMA):
-            self.mesa.reiniciar(SALDO_INICIAL)
-            self.valor_aposta = 10
-            self.mensagem = "Saldo reiniciado. Escolha a aposta e pressione ESPAÇO."
-            return
-
         try:
             self.mesa.apostar(self.valor_aposta)
         except ValueError as erro:
@@ -192,7 +185,8 @@ class SlotsState(BaseState):
             else:
                 self.mensagem = f"Não foi dessa vez. Você perdeu {-liquido}."
             if self.mesa.saldo < self.mesa.custo_de(APOSTA_MINIMA):
-                self.mensagem += " Sem saldo: ESPAÇO para recomeçar."
+                self.mensagem += " Sem saldo!"
+                self.game.agendar_game_over()
             self.valor_aposta = max(APOSTA_MINIMA, min(self.valor_aposta, self._aposta_maxima()))
 
     def _desenhar_simbolo(self, surface, simbolo, rect):

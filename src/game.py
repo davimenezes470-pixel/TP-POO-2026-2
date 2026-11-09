@@ -9,9 +9,12 @@ from states.game_state import GameState
 from states.roleta_state import RoletaState
 from states.black_state import BlackjackState
 from states.celular_state import CelularState
+from states.casaFora_state import CasaForaState
 import config
 from modelos.player import Player
+from states.cutscene_state import CutsceneState
 from states.slots_state import SlotsState
+from states.gameover_state import GameOverState
 
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(2)
@@ -37,22 +40,50 @@ class Game:
 
         screen_max = pygame.display.get_wm_info().get('window')
         if screen_max:
-            ctypes.windll.user32.ShowWindow(screen_max, 3)
+            try:
+                ctypes.windll.user32.ShowWindow(screen_max, 3)
+            except Exception:
+                pass
 
+        self.player = Player(100, 720-512)
 
         self.clock = pygame.time.Clock()
         self.running = True
 
-        self.player = Player(100, 720-512)
+        self.game_over_timer = None
+        self._criar_estados()
 
+    def _criar_estados(self):
         self.state_manager = StateManager()
+        cenas_intro = [
+            {
+                "imagem": 'assets/casacutscene.png',
+                "texto": "AGIOTA: Essa é a ultima vez que te empresto dinheiro!!"
+            },
+            {
+                "imagem": 'assets/casacutscene.png', 
+                "texto": "AGIOTA: Vou levar esse carro como garantia do meu pagamento"
+            }
+        ]
+        self.state_manager.add_state("Intro", CutsceneState(self, self.state_manager, cenas_intro, "CasaFora"))
         self.state_manager.add_state("Menu", MenuState(self, self.state_manager))
         self.state_manager.add_state("Jogo", GameState(self, self.state_manager))
         self.state_manager.add_state("Celular", CelularState(self, self.state_manager))
         self.state_manager.add_state("Roleta", RoletaState(self, self.state_manager))
         self.state_manager.add_state("Blackjack", BlackjackState(self, self.state_manager))
         self.state_manager.add_state("Tigrinho", SlotsState(self, self.state_manager))
+        self.state_manager.add_state("GameOver", GameOverState(self, self.state_manager))
+        self.state_manager.add_state("CasaFora", CasaForaState(self, self.state_manager))
         self.state_manager.change_state("Menu")
+
+    def agendar_game_over(self, atraso=2.0):
+        if self.game_over_timer is None:
+            self.game_over_timer = atraso
+
+    def novo_jogo(self):
+        self.player.carteira.reiniciar()
+        self.game_over_timer = None
+        self._criar_estados()
 
 
     def toggle_fullscreen(self):
@@ -87,6 +118,12 @@ class Game:
 
             self.process_events()
             self.state_manager.update(dt)
+
+            if self.game_over_timer is not None:
+                self.game_over_timer -= dt
+                if self.game_over_timer <= 0:
+                    self.game_over_timer = None
+                    self.state_manager.change_state("GameOver")
 
             self.screen.fill(getattr(config, 'COLOR_BG', (24, 24, 28)))
             self.state_manager.draw(self.screen)

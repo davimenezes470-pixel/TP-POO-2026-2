@@ -15,7 +15,6 @@ COR_AJUDA = (200, 225, 210)
 DELAY_DEALER = 1.0   # segundos entre cada carta do dealer
 APOSTA_MINIMA = 10
 PASSO_APOSTA = 10
-SALDO_INICIAL = 1000
 
 
 class BlackjackState(BaseState):
@@ -27,7 +26,7 @@ class BlackjackState(BaseState):
     def __init__(self, game, state_manager):
         super().__init__(state_manager)
         self.game = game
-        self.mesa = MesaBlackjack(saldo_inicial=SALDO_INICIAL)
+        self.mesa = MesaBlackjack(self.game.player.carteira)
 
         self.valor_aposta = 50
         self.mensagem = "Escolha o valor da aposta e pressione ESPAÇO."
@@ -99,10 +98,7 @@ class BlackjackState(BaseState):
         self._sincronizar()
 
     def _proxima_rodada(self):
-        if self.mesa.saldo <= 0:
-            self.mesa.reiniciar(SALDO_INICIAL)
-        else:
-            self.mesa.nova_rodada()
+        self.mesa.nova_rodada()
         self.valor_aposta = max(self._aposta_minima(), min(self.valor_aposta, self.mesa.saldo))
         self.mensagem = "Escolha o valor da aposta e pressione ESPAÇO."
 
@@ -136,7 +132,8 @@ class BlackjackState(BaseState):
             texto = f"{quem}Você perdeu {-mesa.liquido}."
 
         if mesa.saldo <= 0:
-            texto += " Sem saldo: ESPAÇO para recomeçar."
+            texto += " Sem saldo!"
+            self.game.agendar_game_over()
         else:
             texto += " ESPAÇO: nova rodada."
         self.mensagem = texto
