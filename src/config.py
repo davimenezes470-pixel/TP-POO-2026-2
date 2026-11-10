@@ -1,10 +1,17 @@
 # config.py
+import sys
 from pathlib import Path
 
 # --- CAMINHOS ---
-RAIZ = Path(__file__).resolve().parent.parent
+if getattr(sys, "frozen", False):
+    RAIZ = Path(sys._MEIPASS)
+    PASTA_DADOS = Path(sys.executable).resolve().parent
+else:
+    RAIZ = Path(__file__).resolve().parent.parent
+    PASTA_DADOS = RAIZ
+
 PASTA_ASSETS = RAIZ / "assets"
-ARQUIVO_RUNS = RAIZ / "runs_data.json"
+ARQUIVO_RUNS = PASTA_DADOS / "runs_data.json"
 
 # --- CONFIGURAÇÕES DA TELA ---
 SCREEN_WIDTH = 1280
