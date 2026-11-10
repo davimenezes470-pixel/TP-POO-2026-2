@@ -1,0 +1,312 @@
+{
+    "runs": [
+        {
+            "numero": 1,
+            "ganhos": 5000,
+            "perdas": 10000,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 2,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 2,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 3,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 4,
+            "ganhos": 1000,
+            "perdas": 0,
+            "dias_jogados": 3,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 5,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 6,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 7,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 8,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 9,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 10,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 11,
+            "ganhos": 1500,
+            "perdas": 0,
+            "dias_jogados": 4,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 12,
+            "ganhos": 35000,
+            "perdas": 40000,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 4
+            }
+        },
+        {
+            "numero": 13,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 14,
+            "ganhos": 3500,
+            "perdas": 0,
+            "dias_jogados": 8,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 15,
+            "ganhos": 5000,
+            "perdas": 10000,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 2
+            }
+        },
+        {
+            "numero": 16,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 17,
+            "ganhos": 3500,
+            "perdas": 0,
+            "dias_jogados": 8,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 18,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 19,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 20,
+            "ganhos": 500,
+            "perdas": 0,
+            "dias_jogados": 2,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 21,
+            "ganhos": 3500,
+            "perdas": 0,
+            "dias_jogados": 8,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 22,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 23,
+            "ganhos": 0,
+            "perdas": 5000,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 1
+            }
+        },
+        {
+            "numero": 24,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 25,
+            "ganhos": 3500,
+            "perdas": 0,
+            "dias_jogados": 8,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 26,
+            "ganhos": 6000,
+            "perdas": 11000,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 2
+            }
+        },
+        {
+            "numero": 27,
+            "ganhos": 3500,
+            "perdas": 0,
+            "dias_jogados": 8,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        },
+        {
+            "numero": 28,
+            "ganhos": 0,
+            "perdas": 0,
+            "dias_jogados": 1,
+            "jogos": {
+                "Roleta": 0,
+                "Blackjack": 0,
+                "Tigrinho": 0
+            }
+        }
+    ]
+}
