@@ -54,17 +54,6 @@ py -c "import pygame; print(pygame.version.ver)"
 
 Se o comando `py` não funcionar no seu computador, tente usar `python` no lugar dele.
 
-### 3. Instalar as dependências do projeto e executar
-
-Na pasta principal do projeto, execute:
-
-```bash
-py -m pip install -r requirements.txt
-py src/main.py
-```
-
-O arquivo `requirements.txt` instala as dependências necessárias para o projeto. O comando de instalação do Pygame mostrado acima também pode ser usado separadamente, caso você queira instalar apenas essa biblioteca.
-
 O jogo abre em 1280×720 (60 FPS). Também pode ser empacotado em executável com o
 PyInstaller usando o arquivo `TigrinhoRPG.spec`.
 
@@ -114,7 +103,7 @@ ganhos, perdas, dias jogados e jogadas por minigame. Se o arquivo não existir o
 estiver corrompido, o jogo começa com histórico vazio.
 
 ## Documentação
-- Relatório em formato IEEE: `docs/relatorio.pdf`
+- Relatório em formato IEEE: `docs/RelatórioTP-POO-Grupo6.pdf`
 - Diagramas UML: `docs/`
 
 ## Imagens do jogo

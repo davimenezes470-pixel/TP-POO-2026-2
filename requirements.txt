@@ -1,3 +1,0 @@
-# Dependencias do Tigrinho RPG (Python 3.13)
-# Todo o resto vem da biblioteca padrao do Python (json, pathlib, random, abc...)
-pygame>=2.6.1
