@@ -1,5 +1,6 @@
 import pygame
 from states.base_state import BaseState
+import config
 
 class NoiteState(BaseState):
     def __init__(self, game, state_manager):
@@ -13,7 +14,7 @@ class NoiteState(BaseState):
 
         # Carrega a imagem do quarto e ajusta para o tamanho da tela
         try:
-            img = pygame.image.load("assets/casaNoiteCutscene.jpg").convert()
+            img = pygame.image.load(config.PASTA_ASSETS / "casaNoiteCutscene.jpg").convert()
             self.bg_image = pygame.transform.scale(img, self.game.screen.get_size())
         except:
             self.bg_image = None

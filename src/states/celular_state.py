@@ -1,9 +1,6 @@
-import os
+import config
 import pygame
 from states.base_state import BaseState
-
-# Raiz do projeto (…/TP-POO-2026-2), para achar a imagem de qualquer pasta
-RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 COR_CORPO = (20, 20, 24)
 COR_BORDA_CORPO = (80, 80, 92)
@@ -40,8 +37,8 @@ class CelularState(BaseState):
 
         # Fundo: o quarto do jogo, desfocado e escurecido
         self._fundo_original = pygame.image.load(
-            os.path.join(RAIZ, "assets", "Casa-Principal.jpg")).convert()
-        self._fundo_cache = None   # (tamanho, imagem pronta)
+            str(config.PASTA_ASSETS / "Casa-Principal.jpg")).convert()
+        self._fundo_cache = None
 
     def _fonte(self, tamanho):
         tamanho = max(12, int(tamanho))

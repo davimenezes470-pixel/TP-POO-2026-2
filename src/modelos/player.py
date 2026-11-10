@@ -14,8 +14,8 @@ class Player(pygame.sprite.Sprite):
         
         # Carrega as Sprite Sheets originais
         # (Certifique-se de que as imagens estão no mesmo diretório ou ajuste o caminho)
-        sheet_idle = pygame.image.load("assets/principal-idle.png").convert_alpha()
-        sheet_walk = pygame.image.load("assets/principal-walk.png").convert_alpha()
+        sheet_idle = pygame.image.load(config.PASTA_ASSETS / "principal-idle.png").convert_alpha()
+        sheet_walk = pygame.image.load(config.PASTA_ASSETS / "principal-walk.png").convert_alpha()
 
         # Dicionário guardando todas as animações já recortadas e espelhadas
         self.animations = {

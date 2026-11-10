@@ -1,5 +1,4 @@
 import pygame
-import os
 from states.base_state import BaseState
 
 class CutsceneState(BaseState):

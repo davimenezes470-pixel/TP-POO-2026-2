@@ -1,9 +1,7 @@
 import pygame
-import os
+import config
 from states.base_state import BaseState
 from utils.hud import desenhar_dinheiro
-
-RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class CasaForaState(BaseState):
     def __init__(self, game, state_manager):
@@ -11,7 +9,7 @@ class CasaForaState(BaseState):
         self.game = game
         
         # Carrega a imagem do lado de fora (com tratamento de caminho seguro)
-        imagem_original = pygame.image.load('assets/casaFora.png').convert()
+        imagem_original = pygame.image.load(str(config.PASTA_ASSETS / 'casaFora.png')).convert()
         self.bg_image = pygame.transform.scale(imagem_original, self.game.screen.get_size())        
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.game.player)

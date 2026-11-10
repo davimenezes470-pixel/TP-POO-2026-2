@@ -1,5 +1,4 @@
 import math
-import os
 import pygame
 import config
 from states.base_state import BaseState
@@ -17,8 +16,7 @@ ESTILO_SIMBOLO = {
     "tigre": ("TIGRE", (235, 100, 20)),
     "sete": ("7", (60, 120, 255)),
 }
-PASTA_IMAGENS = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "assets")
-
+PASTA_IMAGENS = config.PASTA_ASSETS
 APOSTA_MINIMA = 5       
 PASSO_APOSTA = 5
 VEL_GIRO = 22.0      
@@ -89,7 +87,7 @@ class SlotsState(BaseState):
 
         imagens = {}
         for nome in ESTILO_SIMBOLO:
-            caminho = os.path.join(PASTA_IMAGENS, f"{nome}.png")
+            caminho = PASTA_IMAGENS / f"{nome}.png"
             try:
                 imagens[nome] = pygame.image.load(caminho).convert_alpha()
             except (pygame.error, FileNotFoundError):

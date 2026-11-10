@@ -1,4 +1,10 @@
 # config.py
+from pathlib import Path
+
+# --- CAMINHOS ---
+RAIZ = Path(__file__).resolve().parent.parent
+PASTA_ASSETS = RAIZ / "assets"
+ARQUIVO_RUNS = RAIZ / "runs_data.json"
 
 # --- CONFIGURAÇÕES DA TELA ---
 SCREEN_WIDTH = 1280

@@ -64,39 +64,39 @@ class Game:
         self.state_manager = StateManager()
         cenas_intro = [
             {
-                "imagem": 'assets/casacutscene.png',
+                "imagem": config.PASTA_ASSETS / "casacutscene.png",
                 "texto": "AGIOTA: Essa é a ultima vez que te empresto dinheiro!!"
             },
             {
-                "imagem": 'assets/casacutscene.png', 
+                "imagem": config.PASTA_ASSETS / 'casacutscene.png', 
                 "texto": "AGIOTA: Vou levar esse carro como garantia do meu pagamento"
             }
         ]
         cenas_derrota = [
             {
-                "imagem": 'assets/casaGameOver.png',
+                "imagem": config.PASTA_ASSETS / 'casaGameOver.png',
                 "texto": "ESPOSA: Eu não aguento mais isso, vou embora!"
             },
             {
-                "imagem": 'assets/casaGameOver.png', 
+                "imagem": config.PASTA_ASSETS / 'casaGameOver.png', 
                 "texto": "FILHA: Papai..."
             },
             {
-                "imagem": 'assets/casaGameOver.png', 
+                "imagem": config.PASTA_ASSETS / 'casaGameOver.png', 
                 "texto": "FILHA: Eu não te conheço mais"
             }
         ]
         cenas_vitoria = [
             {
-                "imagem": 'assets/casaDentroFinal.jpg',
+                "imagem": config.PASTA_ASSETS / 'casaDentroFinal.jpg',
                 "texto": "Após 7 dias sem apostar, sua mente finalmente está clara."
             },
             {
-                "imagem": 'assets/casaDentroFinal.jpg', 
+                "imagem": config.PASTA_ASSETS / 'casaDentroFinal.jpg', 
                 "texto": "ESPOSA: Estamos orgulhosos de você! Você venceu o vício."
             },
             {
-                "imagem": 'assets/casaFCarro.png', 
+                "imagem": config.PASTA_ASSETS / 'casaFCarro.png', 
                 "texto": "Você recuperou o controle da sua vida. Parabéns!"
             }
         ]

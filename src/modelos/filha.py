@@ -1,4 +1,5 @@
 import pygame
+import config
 
 class Filha(pygame.sprite.Sprite):
 
@@ -15,7 +16,7 @@ class Filha(pygame.sprite.Sprite):
         self.tamanho_tela_h = 512
 
         # Carrega a spritesheet (a imagem que está na pasta assets)
-        sheet = pygame.image.load("assets/filha.png").convert_alpha()
+        sheet = pygame.image.load(config.PASTA_ASSETS / "filha.png").convert_alpha()
 
         # Extrai os 9 frames
         self.frames = self._extrair_frames(sheet, 9)

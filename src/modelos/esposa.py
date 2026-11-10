@@ -1,4 +1,5 @@
 import pygame
+import config
 
 class Esposa(pygame.sprite.Sprite):
 
@@ -14,7 +15,7 @@ class Esposa(pygame.sprite.Sprite):
         self.tamanho_tela_h = 600
 
         # Carrega a spritesheet (a imagem deve chamar esposa.png na pasta assets)
-        sheet = pygame.image.load("assets/esposa.png").convert_alpha()
+        sheet = pygame.image.load(config.PASTA_ASSETS / "esposa.png").convert_alpha()
 
         # Extrai os 6 frames
         self.frames = self._extrair_frames(sheet, 6)

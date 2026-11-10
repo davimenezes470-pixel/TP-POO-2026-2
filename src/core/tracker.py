@@ -1,9 +1,8 @@
 import json
-import os
+import config
 
 # Salva o arquivo na raiz do projeto
-RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-CAMINHO_ARQUIVO = os.path.join(RAIZ, "runs_data.json")
+CAMINHO_ARQUIVO = config.ARQUIVO_RUNS
 
 class Tracker:
     def __init__(self):
@@ -12,7 +11,7 @@ class Tracker:
 
     def carregar(self):
         """Lê o arquivo se ele existir."""
-        if os.path.exists(CAMINHO_ARQUIVO):
+        if CAMINHO_ARQUIVO.exists():
             try:
                 with open(CAMINHO_ARQUIVO, "r", encoding="utf-8") as f:
                     dados_salvos = json.load(f)

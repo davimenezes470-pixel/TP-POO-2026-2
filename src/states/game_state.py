@@ -14,7 +14,7 @@ class GameState(BaseState):
         
         # --- BACKGROUND (IMAGEM E ESCALA) ---
         # 1. Carrega a imagem original (o .convert() melhora muito a performance para fundos opacos)
-        imagem_original = pygame.image.load("assets/Casa-Principal.jpg").convert()
+        imagem_original = pygame.image.load(config.PASTA_ASSETS / "Casa-Principal.jpg").convert()
         
         # 2. Obtém o tamanho atual da tela (definido lá no config.py e na classe Game)
         tamanho_tela = self.game.screen.get_size()
