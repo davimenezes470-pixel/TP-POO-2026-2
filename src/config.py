@@ -17,7 +17,7 @@ ARQUIVO_RUNS = PASTA_DADOS / "runs_data.json"
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 FPS = 60
-TITLE = "Demo: Tigrinho - RPG & Minigames"
+TITLE = "Tigrinho Simulator"
 NAME_PHONE = "Apple: Iphone 18 Pro Max"
 
 # --- CORES (RGB) ---
