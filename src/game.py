@@ -1,7 +1,8 @@
+#Módulo principal que controla a janela, o loop e a integração dos subsistemas do jogo.
 import ctypes
 import random
 import sys
-import os #centraliza a janela automaticamente, se ajustando ao monitor
+import os 
 import pygame
 from core.state_manager import StateManager
 from states.menu_state import MenuState
@@ -20,22 +21,22 @@ from core.tracker import Tracker
 from states.runs_state import RunsState
 from states.aviso_state import AvisoState
 
+
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(2)
 except Exception:
     pass
-
 os.environ['SDL_VIDEO_WINDOW_POS'] = 'center'
 
+
 class Game:
-
+    #Controlador central da aplicação que gerencia o Pygame, estados, jogador e histórico.
     def __init__(self):
+        #Inicializa o Pygame, a janela, o rastreador, o jogador e os estados.
         pygame.init()
-
         # Dimensões padrão para o modo janela
         self.window_width = config.SCREEN_WIDTH
         self.window_height = config.SCREEN_HEIGHT
-
         self.is_fullscreen = False
 
         # Cria a janela inicial
@@ -59,8 +60,8 @@ class Game:
 
         self.game_over_timer = None
         self._criar_estados()
-
     def _criar_estados(self):
+        #Instancia e registra todas as telas e cutscenes no gerenciador de estados.
         self.state_manager = StateManager()
         cenas_intro = [
             {
@@ -117,10 +118,12 @@ class Game:
         self.state_manager.change_state("Menu")
 
     def agendar_game_over(self, atraso=2.0):
+        #Agenda a transição para a cutscene de derrota após o atraso informado.
         if self.game_over_timer is None:
             self.game_over_timer = atraso
 
     def novo_jogo(self):
+        #Reinicia o saldo, cria uma nova run no histórico e recria os estados.
         self.tracker.adicionar_run()
         self.player.carteira.reiniciar()
         self.game_over_timer = None
@@ -128,7 +131,7 @@ class Game:
 
 
     def toggle_fullscreen(self):
-        """Alterna dinamicamente o modo de exibição da tela."""
+        #Alterna dinamicamente o modo de exibição da tela.
         self.is_fullscreen = not self.is_fullscreen
 
         if self.is_fullscreen:
@@ -139,7 +142,7 @@ class Game:
             self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE | pygame.WINDOWMAXIMIZED)
 
     def process_events(self):
-
+        #Captura eventos globais (fechar janela, F11) e delega o restante ao estado ativo.
         events = pygame.event.get()
 
         for event in events:
@@ -154,6 +157,7 @@ class Game:
         self.state_manager.process_events(events)
 
     def run(self):
+        #Executa o loop principal do jogo até que `running` seja falso.
         while self.running:
             dt = self.clock.tick(config.FPS) / 1000.0
 

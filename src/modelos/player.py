@@ -1,14 +1,14 @@
+#Módulo da entidade jogável
 import pygame
 import config
 from modelos.carteira import Carteira
 
 class Player(pygame.sprite.Sprite):
-
+    #Representa o personagem controlável pelo jogador, sua carteira e animações.
     def __init__(self, x, y, tracker = None):
         super().__init__()
 
         self.carteira = Carteira(config.SALDO_INICIAL, tracker)
-        # --- CONFIGURAÇÕES DE SPRITE ---
         self.frame_width = 128
         self.frame_height = 128
         
@@ -26,10 +26,10 @@ class Player(pygame.sprite.Sprite):
         }
 
         # --- ESTADO E ANIMAÇÃO ---
-        self.state = "idle_right"      # Estado inicial
-        self.olhando_direita = True    # Controla a direção em que parou
-        self.frame_index = 0.0         # Índice do quadro atual (decimal para fluidez com dt)
-        self.animation_speed = 10.0    # Velocidade da animação (10 quadros por segundo)
+        self.state = "idle_right"    
+        self.olhando_direita = True    
+        self.frame_index = 0.0         
+        self.animation_speed = 10.0    
 
         # Configuração inicial exigida pelo Pygame
         self.image = self.animations[self.state][int(self.frame_index)]
@@ -39,30 +39,24 @@ class Player(pygame.sprite.Sprite):
         # --- FÍSICA E MOVIMENTO ---
         self.pos_x = float(x)
         self.pos_y = float(y)
-        self.speed = 400  # Pixels por segundo
+        self.speed = 400  
 
     def _extrair_frames(self, sheet, num_frames, espelhar=False):
-        """
-        Recorta os quadros da sprite sheet.
-        Se 'espelhar=True', inverte a imagem horizontalmente para andar para a esquerda.
-        """
+
+        #Recorta os quadros da sprite sheet.
+        #Se 'espelhar=True', inverte a imagem horizontalmente para andar para a esquerda.
+
         frames = []
         for i in range(num_frames):
-            # 1. Cria a superfície transparente para o quadro
             frame = pygame.Surface((self.frame_width, self.frame_height), pygame.SRCALPHA)
             
-            # 2. Define qual área da sheet será recortada (Avança de 128 em 128 no eixo X)
             area_corte = pygame.Rect(i * self.frame_width, 0, self.frame_width, self.frame_height)
             
-            # 3. Desenha o recorte na superfície em branco
             frame.blit(sheet, (0, 0), area_corte)
             
-            # 4. Aplica o espelhamento se for para a esquerda
             if espelhar:
-                # flip(imagem, eixo_x, eixo_y)
                 frame = pygame.transform.flip(frame, True, False)
                 
-            # Opcional: Se a imagem ficar muito grande na tela, você pode escalá-la aqui:
             frame = pygame.transform.scale(frame, (768, 768))
 
             frames.append(frame)
@@ -70,7 +64,7 @@ class Player(pygame.sprite.Sprite):
         return frames
 
     def _processar_controles(self, dt):
-        """Lê o teclado e define o novo estado de movimento e direção."""
+        #Lê o teclado e define o novo estado de movimento e direção.
         keys = pygame.key.get_pressed()
         em_movimento = False
 
@@ -90,7 +84,7 @@ class Player(pygame.sprite.Sprite):
             self.state = "idle_right" if self.olhando_direita else "idle_left"
 
     def _animar(self, dt):
-        """Atualiza a imagem exibida baseando-se no estado atual."""
+        #Atualiza a imagem exibida baseando-se no estado atual.
         # Avança o índice do frame baseado no tempo real (dt)
         self.frame_index += self.animation_speed * dt
         
@@ -104,17 +98,14 @@ class Player(pygame.sprite.Sprite):
         self.image = lista_atual[int(self.frame_index)]
 
     def update(self, dt):
-        """Método principal chamado a cada frame."""
+        #Método principal chamado a cada frame.
         self._processar_controles(dt)
         self._animar(dt)
 
-        # Sincroniza o Float de posição com o Rect (Inteiro) para o Pygame desenhar no lugar certo
         self.rect.x = int(self.pos_x)
         self.rect.y = int(self.pos_y)
 
-        # 1. Atualiza primeiro a Hitbox (a caixa pequena)
         self.hitbox.x = int(self.pos_x)
         self.hitbox.y = int(self.pos_y)
 
-        # 2. Faz a imagem seguir o centro da Hitbox
         self.rect.center = self.hitbox.center

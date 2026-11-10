@@ -1,4 +1,4 @@
-# config.py
+#Módulo de configurações globais, caminhos de arquivos e constantes do jogo.
 import sys
 from pathlib import Path
 
@@ -29,6 +29,5 @@ COLOR_BG = (24, 24, 28)
 SALDO_INICIAL = 5000
 
 # --- FÍSICA E JOGABILIDADE ---
-# --- EXEMPLOS ---
 PLAYER_SPEED = 5
 TILE_SIZE = 40

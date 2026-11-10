@@ -1,3 +1,4 @@
+#Módulo de persistência de dados e rastreamento estatístico das partidas (runs).
 import json
 import config
 
@@ -5,12 +6,14 @@ import config
 CAMINHO_ARQUIVO = config.ARQUIVO_RUNS
 
 class Tracker:
+    #Registra e persiste em JSON o histórico de runs, ganhos, perdas e dias jogados.
     def __init__(self):
+        #Inicializa a estrutura de dados e carrega o histórico salvo em disco.
         self.dados = {"runs": []}
         self.carregar()
 
     def carregar(self):
-        """Lê o arquivo se ele existir."""
+        #Lê o arquivo se ele existir.
         if CAMINHO_ARQUIVO.exists():
             try:
                 with open(CAMINHO_ARQUIVO, "r", encoding="utf-8") as f:
@@ -23,12 +26,12 @@ class Tracker:
                 pass
 
     def salvar(self):
-        """Salva as informações no HD."""
+        #Salva as informações no HD.
         with open(CAMINHO_ARQUIVO, "w", encoding="utf-8") as f:
             json.dump(self.dados, f, indent=4)
 
     def adicionar_run(self):
-        """Cria uma nova run no histórico."""
+        #Cria uma nova run no histórico.
         numero_nova_run = len(self.dados["runs"]) + 1
         nova_run = {
             "numero": numero_nova_run,
@@ -48,7 +51,7 @@ class Tracker:
         self.salvar()
 
     def registrar_dinheiro(self, diferenca):
-        """Adiciona ganhos ou perdas na run atual (a última da lista)."""
+        #Adiciona ganhos ou perdas na run atual (a última da lista).
         if not self.dados["runs"]:
             return
             
@@ -60,7 +63,7 @@ class Tracker:
             run_atual["perdas"] += abs(diferenca)
         self.salvar()
     def registrar_jogada(self, nome_jogo):
-        """Registra que um jogo foi jogado na run atual."""
+        #Registra que um jogo foi jogado na run atual.
         if not self.dados["runs"]:
             return
             
@@ -70,7 +73,7 @@ class Tracker:
         self.apostas_hoje += 1
         self.salvar()
     def avancar_dia(self):
-        """Método novo chamado pela cutscene da noite."""
+        #Método novo chamado pela cutscene da noite.
         if self.apostas_hoje == 0:
             self.dias_sem_apostar += 1
         else:
