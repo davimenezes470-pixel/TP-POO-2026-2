@@ -42,6 +42,8 @@ class CutsceneState(BaseState):
     def _pular(self):
         """Pula a cutscene inteira e reseta o índice."""
         self.indice_atual = 0 
+        if self.proximo_estado == "Menu":
+            self.game.novo_jogo()
         self.state_manager.change_state(self.proximo_estado)
 
     def update(self, dt):

@@ -52,7 +52,7 @@ class Game:
         self.tracker = Tracker()                
         self.tracker.adicionar_run()
 
-        self.player = Player(100, 720-512, self.tracker)
+        self.player = Player(100, 720-528, self.tracker)
 
         self.clock = pygame.time.Clock()
         self.running = True
@@ -72,8 +72,38 @@ class Game:
                 "texto": "AGIOTA: Vou levar esse carro como garantia do meu pagamento"
             }
         ]
+        cenas_derrota = [
+            {
+                "imagem": 'assets/casaGameOver.png',
+                "texto": "ESPOSA: Eu não aguento mais isso, vou embora!"
+            },
+            {
+                "imagem": 'assets/casaGameOver.png', 
+                "texto": "FILHA: Papai..."
+            },
+            {
+                "imagem": 'assets/casaGameOver.png', 
+                "texto": "FILHA: Eu não te conheço mais"
+            }
+        ]
+        cenas_vitoria = [
+            {
+                "imagem": 'assets/casaDentroFinal.jpg',
+                "texto": "Após 7 dias sem apostar, sua mente finalmente está clara."
+            },
+            {
+                "imagem": 'assets/casaDentroFinal.jpg', 
+                "texto": "ESPOSA: Estamos orgulhosos de você! Você venceu o vício."
+            },
+            {
+                "imagem": 'assets/casaFCarro.png', 
+                "texto": "Você recuperou o controle da sua vida. Parabéns!"
+            }
+        ]
         self.state_manager.add_state("Aviso", AvisoState(self, self.state_manager))
         self.state_manager.add_state("Intro", CutsceneState(self, self.state_manager, cenas_intro, "CasaFora"))
+        self.state_manager.add_state("CutsceneGameOver", CutsceneState(self, self.state_manager, cenas_derrota, "GameOver"))
+        self.state_manager.add_state("CutsceneVitoria", CutsceneState(self, self.state_manager, cenas_vitoria, "Menu"))
         self.state_manager.add_state("Menu", MenuState(self, self.state_manager))
         self.state_manager.add_state("Jogo", GameState(self, self.state_manager))
         self.state_manager.add_state("Celular", CelularState(self, self.state_manager))
@@ -134,7 +164,7 @@ class Game:
                 self.game_over_timer -= dt
                 if self.game_over_timer <= 0:
                     self.game_over_timer = None
-                    self.state_manager.change_state("GameOver")
+                    self.state_manager.change_state("CutsceneGameOver")
 
             self.screen.fill(getattr(config, 'COLOR_BG', (24, 24, 28)))
             self.state_manager.draw(self.screen)
