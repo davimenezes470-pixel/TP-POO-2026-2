@@ -21,11 +21,11 @@ class RunsState(BaseState):
                 
                 # Navegação nas páginas
                 elif event.key == pygame.K_RIGHT:
-                    total_runs = len(self.game.tracker.dados["runs"])
+                    total_runs = self.game.tracker.total_runs
                     if total_runs > 0:
                         self.pagina_atual = (self.pagina_atual + 1) % total_runs
                 elif event.key == pygame.K_LEFT:
-                    total_runs = len(self.game.tracker.dados["runs"])
+                    total_runs = self.game.tracker.total_runs
                     if total_runs > 0:
                         self.pagina_atual = (self.pagina_atual - 1) % total_runs
 
@@ -36,22 +36,22 @@ class RunsState(BaseState):
         w, h = surface.get_size()
         surface.fill((20, 20, 24))  
 
-        runs = self.game.tracker.dados["runs"]
+        total_runs = self.game.tracker.total_runs
 
-        if not runs:
+        if total_runs == 0:
             txt = self.fonte_texto.render("Nenhuma run registrada.", True, config.COLOR_WHITE)
             surface.blit(txt, txt.get_rect(center=(w // 2, h // 2)))
         else:
             # Garante que o índice não quebre se o arquivo for resetado
-            if self.pagina_atual >= len(runs):
-                self.pagina_atual = len(runs) - 1
+            if self.pagina_atual >= total_runs:
+                self.pagina_atual = total_runs - 1
                 
-            run = runs[self.pagina_atual]
+            run = self.game.tracker.obter_run(self.pagina_atual)
             
             # Textos a serem exibidos
             textos = [
                 (self.fonte_titulo, f"RUN #{run['numero']}", config.COLOR_WHITE, -190),
-                (self.fonte_texto, f"Dias apostando: {run.get('dias_jogados', 1)}", (200, 200, 255), -120),
+                (self.fonte_texto, f"Dias vividos: {run.get('dias_jogados', 1)}", (200, 200, 255), -120),
                 (self.fonte_texto, f"Dinheiro Ganho: R$ {run['ganhos']:,}", (100, 220, 120), -70),
                 (self.fonte_texto, f"Dinheiro Perdido: R$ {run['perdas']:,}", (220, 100, 100), -20),
                 (self.fonte_texto, "--- Quantidade de Jogadas ---", (180, 180, 180), 40),
@@ -66,7 +66,7 @@ class RunsState(BaseState):
                 surface.blit(surf, rect)
             
             # Guia de Paginação inferior
-            paginacao = self.fonte_dica.render(f"Página {self.pagina_atual + 1} de {len(runs)} (Use as setas <- ->)", True, (150, 150, 150))
+            paginacao = self.fonte_dica.render(f"Página {self.pagina_atual + 1} de {total_runs} (Use as setas <- ->)", True, (150, 150, 150))
             surface.blit(paginacao, paginacao.get_rect(center=(w // 2, h // 2 + 220)))
 
         # Dica de voltar
