@@ -37,7 +37,7 @@ class NoiteState(BaseState):
     def _amanhecer(self):
         self.tempo = 0.0
         self.game.tracker.avancar_dia()
-        if getattr(self.game.tracker, 'dias_sem_apostar', 0) >= 7:
+        if self.game.tracker.dias_sem_apostar >= 7:
             self.state_manager.change_state("CutsceneVitoria")
         else:
             self.state_manager.change_state("Jogo")
