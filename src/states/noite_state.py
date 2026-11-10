@@ -6,7 +6,7 @@ class NoiteState(BaseState):
         super().__init__(state_manager)
         self.game = game
         self.tempo = 0.0
-        self.duracao = 4.0  # Tempo em segundos da noite
+        self.duracao = 2.0  # Tempo em segundos da noite
         
         self.fonte_titulo = pygame.font.Font(None, 60)
         self.fonte_sub = pygame.font.Font(None, 36)
@@ -36,7 +36,10 @@ class NoiteState(BaseState):
     def _amanhecer(self):
         self.tempo = 0.0
         self.game.tracker.avancar_dia()
-        self.state_manager.change_state("Jogo")
+        if getattr(self.game.tracker, 'dias_sem_apostar', 0) >= 7:
+            self.state_manager.change_state("CutsceneVitoria")
+        else:
+            self.state_manager.change_state("Jogo")
 
     def draw(self, surface):
         w, h = surface.get_size()

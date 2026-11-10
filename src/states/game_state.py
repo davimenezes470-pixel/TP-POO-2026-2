@@ -1,5 +1,6 @@
 import pygame
 import config
+import random
 from states.base_state import BaseState
 from modelos.esposa import Esposa
 from modelos.filha import Filha
@@ -32,19 +33,64 @@ class GameState(BaseState):
         self.all_sprites.add(self.game.player)
         self.fonte_aviso = pygame.font.Font(None, 32)
 
+        # --- SISTEMA DE DIÁLOGOS ---
+        self.dialogo_ativo = False
+        self.dialogo_linhas = []
+        self.dialogo_indice = 0
+        
+        self.dialogos_esposa = [
+            ("Você vai sair de novo? As contas estão atrasadas.", "Eu vou resolver isso hoje, confia em mim."),
+            ("Não aguento mais essa situação, precisamos de estabilidade.", "Só preciso de mais uma chance, eu juro."),
+            ("Onde foi parar o dinheiro que deixei na gaveta?", "Eu peguei emprestado, logo eu devolvo em dobro."),
+            ("Você tem passado muito tempo naquele celular...", "É só trabalho, não se preocupe com isso."),
+            ("A gente costumava ser tão feliz antes de tudo isso.", "Nós vamos ser felizes de novo, é só uma fase ruim.")
+        ]
+        
+        self.dialogos_filha = [
+            ("Pai, você prometeu que ia brincar comigo hoje.", "O papai tá ocupado agora, filha. Mais tarde, tá bom?"),
+            ("Meus amigos da escola disseram que você tá devendo dinheiro.", "Não dê ouvidos a eles, as pessoas falam demais."),
+            ("Você vai no meu torneio no fim de semana?", "Se eu conseguir um dinheiro até lá, eu vou."),
+            ("Pai, por que a mãe tava chorando ontem à noite?", "Problemas de adulto, princesa. Vai ficar tudo bem."),
+            ("Eu fiz um desenho pra você, olha!", "Que lindo, filha. Deixa o papai ver isso depois, tá?")
+        ]
+
+    def iniciar_dialogo(self, lista_dialogos, nome_npc):
+        dialogo_escolhido = random.choice(lista_dialogos)
+        self.dialogo_linhas = [
+            (nome_npc, dialogo_escolhido[0]),
+            ("Você", dialogo_escolhido[1])
+        ]
+        self.dialogo_indice = 0
+        self.dialogo_ativo = True
+
     def process_events(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
+                
+                # Avança ou fecha o diálogo
+                if self.dialogo_ativo and event.key in (pygame.K_e, pygame.K_SPACE, pygame.K_RETURN):
+                    self.dialogo_indice += 1
+                    if self.dialogo_indice >= len(self.dialogo_linhas):
+                        self.dialogo_ativo = False
+                    return # Bloqueia outras ações enquanto fala
+
                 if event.key == pygame.K_ESCAPE:
                     self.state_manager.change_state("Menu")
-                elif event.key == pygame.K_c:
+                elif event.key == pygame.K_c and not self.dialogo_ativo:
                     self.state_manager.change_state("Celular")
-                elif event.key == pygame.K_f:
-                    # Vai para o lado de fora
+                elif event.key == pygame.K_f and not self.dialogo_ativo:
                     self.state_manager.change_state("CasaFora")
-
+                elif event.key == pygame.K_e and not self.dialogo_ativo:
+                    # Inicia diálogo se estiver perto
+                    if self.game.player.hitbox.colliderect(self.filha.hitbox):
+                        self.iniciar_dialogo(self.dialogos_filha, "Filha")
+                    elif self.game.player.hitbox.colliderect(self.esposa.hitbox):
+                        self.iniciar_dialogo(self.dialogos_esposa, "Esposa")
+                        
     def update(self, dt):
-        self.all_sprites.update(dt)
+        
+        if not self.dialogo_ativo:
+            self.all_sprites.update(dt)
         
         # --- LÓGICA DE COLISÃO COM AS BORDAS LATERAIS (USANDO A HITBOX) ---
         largura_tela = self.game.screen.get_width()
@@ -73,6 +119,29 @@ class GameState(BaseState):
         
         surface.blit(sombra, rect_sombra)
         surface.blit(branco, rect_branco)
+
+    def _desenhar_caixa_dialogo(self, surface):
+        w, h = surface.get_size()
+        altura_caixa = int(h * 0.25)
+        caixa = pygame.Surface((w, altura_caixa))
+        caixa.set_alpha(220)
+        caixa.fill((10, 10, 12))
+        
+        y_topo = h - altura_caixa
+        surface.blit(caixa, (0, y_topo))
+        pygame.draw.line(surface, (200, 200, 200), (0, y_topo), (w, y_topo), 2)
+        
+        nome, texto = self.dialogo_linhas[self.dialogo_indice]
+        
+        cor_nome = (200, 200, 100) if nome == "Você" else (100, 200, 200)
+        surf_nome = self.fonte_aviso.render(nome + ":", True, cor_nome)
+        surface.blit(surf_nome, (50, y_topo + 30))
+        
+        surf_texto = self.fonte_aviso.render(texto, True, (255, 255, 255))
+        surface.blit(surf_texto, (50, y_topo + 80))
+        
+        surf_dica = self.fonte_aviso.render("Aperte E para continuar", True, (150, 150, 150))
+        surface.blit(surf_dica, (w - surf_dica.get_width() - 50, h - 40))
         
     def draw(self, surface):
         surface.blit(self.bg_image, (0, 0))
@@ -80,13 +149,16 @@ class GameState(BaseState):
 
         # HUD de dinheiro (canto superior direito)
         desenhar_dinheiro(surface, self.game.player.carteira.saldo)
-        # Se as hitboxes do jogador e da filha se tocarem, desenha o aviso sobre ela
-        if self.game.player.hitbox.colliderect(self.filha.hitbox):
-            self._desenhar_aviso(surface, "Aperte E para falar com filha", self.filha.rect)
-            
-        # Se as hitboxes do jogador e da esposa se tocarem, desenha o aviso sobre ela
-        if self.game.player.hitbox.colliderect(self.esposa.hitbox):
-            self._desenhar_aviso(surface, "Aperte E para falar com esposa", self.esposa.rect)
+
+        if self.dialogo_ativo:
+            self._desenhar_caixa_dialogo(surface)
+        else:
+            # Só desenha os avisos flutuantes se não estiver no meio de uma conversa
+            if self.game.player.hitbox.colliderect(self.filha.hitbox):
+                self._desenhar_aviso(surface, "Aperte E para falar com filha", self.filha.rect)
+                
+            if self.game.player.hitbox.colliderect(self.esposa.hitbox):
+                self._desenhar_aviso(surface, "Aperte E para falar com esposa", self.esposa.rect)
 
         w, h = surface.get_size()
         texto_celular = "Aperte C para abrir o celular"

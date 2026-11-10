@@ -45,6 +45,7 @@ class Tracker:
         self.dados["runs"].append(nova_run)
         self.dia_atual = 1
         self.apostas_hoje = 0
+        self.dias_sem_apostar = 0
         self.salvar()
 
     def registrar_dinheiro(self, diferenca):
@@ -71,6 +72,10 @@ class Tracker:
         self.salvar()
     def avancar_dia(self):
         """Método novo chamado pela cutscene da noite."""
+        if self.apostas_hoje == 0:
+            self.dias_sem_apostar += 1
+        else:
+            self.dias_sem_apostar = 0
         self.dia_atual += 1
         self.apostas_hoje = 0
         if self.dados["runs"]:

@@ -28,6 +28,7 @@ class CelularState(BaseState):
         self.apps_home = [
             ("jogos", "Jogos", "J", (230, 90, 70)),
             ("runs", "Runs", "R", (70, 140, 230)),
+            ("ifood", "iFood", "iF", (234, 29, 44)),
             ("voltar", "Voltar", "<", (120, 120, 130)),
         ]
         # (nome do estado, rótulo, símbolo, cor)
@@ -96,6 +97,9 @@ class CelularState(BaseState):
                 # Salva a origem e leva para o arquivo de estado real
                 self.game.origem_runs = "Celular"
                 self.state_manager.change_state("Runs")
+            elif chave == "ifood":
+                self.game.player.carteira.saldo += 500
+                self.state_manager.change_state("Noite")
             else:
                 self._sair()
         elif self.tela == JOGOS:
