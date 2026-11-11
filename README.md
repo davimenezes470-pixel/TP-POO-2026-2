@@ -5,7 +5,7 @@ Você é um pai endividado com um agiota, com um celular cheio de apps de aposta
 **Para vencer, passe 7 dias seguidos sem apostar.** Se o saldo zerar, você perde a família.
 
 > Trabalho da disciplina de Programação Orientada a Objetos — Universidade Federal de Minas Gerais, 2026.
-> Autores: Arthur Lobo Nunes Verçosa, Davi Menezes dos Santos, Renato Alexandre Moura Pinheiro, Yan Martelleto
+> Autores: Arthur Lobo Nunes Verçosa, Davi Menezes dos Santos, Renato Alexandre Moura Pinheiro, Yan Martelleto de Mello
 
 ## Sumário
 - [Como jogar](#como-jogar)
@@ -103,7 +103,7 @@ ganhos, perdas, dias jogados e jogadas por minigame. Se o arquivo não existir o
 estiver corrompido, o jogo começa com histórico vazio.
 
 ## Documentação
-- Relatório em formato IEEE: `docs/RelatórioTP-POO-Grupo6.pdf`
+- Relatório em formato IEEE: `docs/RelatorioTP-POO-Grupo6.pdf`
 - Diagramas UML: `docs/`
 
 ## Imagens do jogo
